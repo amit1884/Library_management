@@ -77,8 +77,38 @@ connection.query(sql,(err,rows,fields)=>{
     }
 });
 });
-
-
+app.post('/admin/:id',(req,res)=>{
+    var bid=req.params.id;
+    var sql="DELETE FROM books WHERE book_id='"+bid+"'";
+    connection.query(sql,(err,rows,fields)=>{
+        if(err)
+        {
+            console.log(err);
+            res.redirect('/admin');
+        }
+        else
+        {
+            console.log('1 row deleted successfully');
+            res.redirect('/admin');
+        }
+    });
+});
+app.get('/admin/:id',(req,res)=>{
+    var bkid=req.params.id;
+    console.log(bkid);
+    var sql="SELECT * FROM books WHERE book_id='"+bkid+"'";
+    connection.query(sql,(err,rows,fields)=>{
+        if(err)
+        {
+            console.log(err);
+            res.redirect('/admin');
+        }
+        else{
+            console.log(rows);
+            res.render('admin/updatebook',{bkdata:rows});
+        }
+    });
+});
 //Admin routes ends here
 
 

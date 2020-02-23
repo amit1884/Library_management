@@ -27,6 +27,10 @@
         padding:10px;
         min-height:250px;
     }
+    marquee li{
+        padding:15px;
+        color:#413e66;
+    }
 </style>
 </head>
 <body>
@@ -45,7 +49,7 @@
     </div>
 </div>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#"><i class ="fa fa-user"></i>Signed As Amit</a>
+    &nbsp;&nbsp;&nbsp;<a class="navbar-brand" href="#"><img src ="../images/images.png"width="40" height ="40">&nbsp;&nbsp;SignedIn As Amit</a>
   </nav>
   <div class ="container-fluid">
     <div class ="row">
@@ -53,16 +57,16 @@
             <div class ="list-group">
                 <div class ="list-group-item active"><a href ="#" style ="color:white">List Of Books</a></div>
                 <div class ="list-group-item"><a href ="admin/bookentry">Add New Book</a></div>
-                <div class ="list-group-item"><a href ="#">Update Book Record</a></div>
                 <div class ="list-group-item"><a href ="#">Issue a Book</a></div>
                 <div class ="list-group-item"><a href ="#">Student Details</a></div>
             </div><br>
             <div class ="bk_notification jumbotron">
                 <h4 class ="text-center"><u>Notice</u></h4>
                 <ul>
-                <marquee speed="5" direction="up">
+                <marquee scrolldelay="10" direction="up"height="100px;" onmouseover="stop();" onmouseout="start()">
                     <li>New books for GATE  will be arriving very soon</li>
                     <li>More E-books will be added soon</li>
+                    <li>Nit jamshedpur</li>
                 </marquee>
                 </ul>
             </div>
@@ -102,7 +106,7 @@
                                 <td><%=data.book_department%></td>
                                 <td><%=data.book_qty%></td>
                                 <td>
-                                    <form action ="/admin/<%=data.book_id%>" method ="POST">
+                                    <form action ="/admin/<%=data.book_id%>" method ="get">
                                         <button type ="submit" value="<%=data.book_id%>"name="submit" class ="btn btn-outline-warning">Update</button>
                                     </form>
                                 </td>
