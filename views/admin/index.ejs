@@ -23,6 +23,10 @@
         background-color:#f5f8fd;
         color:#000;
     }
+    .jumbotron{
+        padding:10px;
+        min-height:250px;
+    }
 </style>
 </head>
 <body>
@@ -52,6 +56,15 @@
                 <div class ="list-group-item"><a href ="#">Update Book Record</a></div>
                 <div class ="list-group-item"><a href ="#">Issue a Book</a></div>
                 <div class ="list-group-item"><a href ="#">Student Details</a></div>
+            </div><br>
+            <div class ="bk_notification jumbotron">
+                <h4 class ="text-center"><u>Notice</u></h4>
+                <ul>
+                <marquee speed="5" direction="up">
+                    <li>New books for GATE  will be arriving very soon</li>
+                    <li>More E-books will be added soon</li>
+                </marquee>
+                </ul>
             </div>
         </div>
         <div class ="col-md-9 col-xs-12">
@@ -73,6 +86,8 @@
                             <th>Course</th>
                             <th>Department</th>
                             <th>Quantity</th>
+                            <th>Update</th>
+                            <th>Delete</th>
                         </tr>
                         <%books.forEach((data)=>{%>
                             <%i++;%>
@@ -86,6 +101,16 @@
                                 <td><%=data.book_course%></td>
                                 <td><%=data.book_department%></td>
                                 <td><%=data.book_qty%></td>
+                                <td>
+                                    <form action ="/admin/<%=data.book_id%>" method ="POST">
+                                        <button type ="submit" value="<%=data.book_id%>"name="submit" class ="btn btn-outline-warning">Update</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form action ="/admin/<%=data.book_id%>" method ="POST">
+                                        <button type ="submit" value="<%=data.book_id%>"name="submit" class ="btn btn-outline-danger">Delete</button>
+                                    </form>
+                                </td>
                             </tr>
                         <%})%>
                     </table>
