@@ -9,7 +9,7 @@ app.set("view engine","ejs");
 app.set('views',path.join(__dirname,'views'));
 app.use(express.static("public"));
 app.use(bodyparser.urlencoded({extended:true}));
-
+app.use(methodOverride("_method"));
 //database configuration 
 var connection=mysql.createConnection({
     host:'localhost',
@@ -33,7 +33,7 @@ app.get('/',(req,res)=>{
 //Basic page rendering routes
 app.get('/admin/',(req,res)=>{
 
-    var sql="SELECT * FROM books";
+    var sql="SELECT * FROM books ORDER BY book_id";
     connection.query(sql,(err,rows,fields)=>{
         if(err)
         console.log(err);
@@ -109,6 +109,28 @@ app.get('/admin/:id',(req,res)=>{
         }
     });
 });
+
+app.put('/admin/update/:id',(req,res)=>{
+
+    var updata=req.body.book_qty;
+console.log(updata);
+var sql="UPDATE books SET book_qty='"+updata+"' WHERE book_id='"+req.params.id+"'";
+connection.query(sql,(err,rows,fields)=>{
+    if(err)
+    {
+        console.log(err);
+        res.redirect('/admin');
+    }
+    else{
+        console.log('Row updated');
+        res.redirect('/admin');
+    }
+});
+});
+
+
+
+
 //Admin routes ends here
 
 
