@@ -8,13 +8,13 @@
         <div class ="col-md-6 col-xs-12">
             <div class ="books_enter">
                     <form action ="/admin/update/<%=bkdata[0].book_id%>?_method=PUT" method ="POST">
-                    <div class ="form-group"><input class ="form-control" type ="text" name ="book_id" placeholder ="Book's Id" value="<%=bkdata[0].book_id%>"></div>
-                    <div class ="form-group"><input class ="form-control" type ="text" name ="book_name" placeholder ="Book's Name"value="<%=bkdata[0].book_name%>" ></div>
-                    <div class ="form-group"><input class ="form-control" type ="text" name ="author" placeholder ="Author" value="<%=bkdata[0].book_author%>"></div>
+                    <div class ="form-group"><input class ="form-control" type ="text" name ="book_id" placeholder ="Book's Id" value="<%=bkdata[0].book_id%>"disabled></div>
+                    <div class ="form-group"><input class ="form-control" type ="text" name ="book_name" placeholder ="Book's Name"value="<%=bkdata[0].book_name%>" disabled></div>
+                    <div class ="form-group"><input class ="form-control" type ="text" name ="author" placeholder ="Author" value="<%=bkdata[0].book_author%>" disabled></div>
                     <div class ="form-group"><input class ="form-control" type ="text" name ="edition" placeholder ="Edition" value="<%=bkdata[0].book_edition%>"></div>
-                    <div class ="form-group"><input class ="form-control" type ="text" name ="publication" placeholder ="Publication" value="<%=bkdata[0].book_publication%>"></div>
-                    <div class ="form-group"><input class ="form-control" type ="text" name ="course" placeholder ="Name of the course" value="<%=bkdata[0].book_course%>"></div>
-                    <div class ="form-group"><input class ="form-control" type ="text" name ="department" placeholder ="Department" value="<%=bkdata[0].book_department%>"></div>
+                    <div class ="form-group"><input class ="form-control" type ="text" name ="publication" placeholder ="Publication" value="<%=bkdata[0].book_publication%>"disabled></div>
+                    <div class ="form-group"><input class ="form-control" type ="text" name ="course" placeholder ="Name of the course" value="<%=bkdata[0].book_course%>"disabled></div>
+                    <div class ="form-group"><input class ="form-control" type ="text" name ="department" placeholder ="Department" value="<%=bkdata[0].book_department%>"disabled></div>
                     <div class ="form-group"><input class ="form-control" type ="number" name ="book_qty" placeholder ="Number Of Books" value="<%=bkdata[0].book_qty%>"></div>
                     <div class ="form-group"><input class ="form-control btn btn-outline-primary" type ="submit" name ="submit"></div>
                     </form>

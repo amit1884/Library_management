@@ -112,9 +112,10 @@ app.get('/admin/:id',(req,res)=>{
 
 app.put('/admin/update/:id',(req,res)=>{
 
+    var upedt=req.body.edition;
     var updata=req.body.book_qty;
 console.log(updata);
-var sql="UPDATE books SET book_qty='"+updata+"' WHERE book_id='"+req.params.id+"'";
+var sql="UPDATE books SET book_qty='"+updata+"',book_edition='"+upedt+"' WHERE book_id='"+req.params.id+"'";
 connection.query(sql,(err,rows,fields)=>{
     if(err)
     {
