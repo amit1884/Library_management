@@ -12,4 +12,4 @@ connection.connect((err)=>{
     else
     console.log('connected');
 });
-module.exports=configDb;
+module.exports=connection;

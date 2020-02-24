@@ -56,7 +56,7 @@
         <div class ="col-md-3 col-xs-12">
             <div class ="list-group">
                 <div class ="list-group-item active"><a href ="#" style ="color:white">List Of Books</a></div>
-                <div class ="list-group-item"><a href ="admin/bookentry">Add New Book</a></div>
+                <div class ="list-group-item"><a href ="/Admin/admin/bookentry">Add New Book</a></div>
                 <div class ="list-group-item"><a href ="#">Issue a Book</a></div>
                 <div class ="list-group-item"><a href ="#">Student Details</a></div>
             </div><br>
@@ -106,12 +106,12 @@
                                 <td><%=data.book_department%></td>
                                 <td><%=data.book_qty%></td>
                                 <td>
-                                    <form action ="/admin/<%=data.book_id%>" method ="get">
+                                    <form action ="/Admin/admin/<%=data.book_id%>" method ="get">
                                         <button type ="submit" value="<%=data.book_id%>"name="submit" class ="btn btn-outline-warning">Update</button>
                                     </form>
                                 </td>
                                 <td>
-                                    <form action ="/admin/<%=data.book_id%>" method ="POST">
+                                    <form action ="/Admin/admin/<%=data.book_id%>" method ="POST">
                                         <button type ="submit" value="<%=data.book_id%>"name="submit" class ="btn btn-outline-danger">Delete</button>
                                     </form>
                                 </td>
