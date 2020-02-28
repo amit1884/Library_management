@@ -1,3 +1,4 @@
+// var util=require('util');
 var mysql=require('mysql');
 
 var connection=mysql.createConnection({
@@ -12,4 +13,5 @@ connection.connect((err)=>{
     else
     console.log('connected');
 });
+// connection.query=util.promisify(connection.query);
 module.exports=connection;
