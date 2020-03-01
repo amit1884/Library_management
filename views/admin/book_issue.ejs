@@ -49,14 +49,14 @@
     </div>
 </div>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    &nbsp;&nbsp;&nbsp;<a class="navbar-brand" href="#"><img src ="../images/images.png"width="40" height ="40">&nbsp;&nbsp;SignedIn As <%=active%></a>
+    &nbsp;&nbsp;&nbsp;<a class="navbar-brand" href="#"><img src ="../images/images.png"width="40" height ="40">&nbsp;&nbsp;SignedIn As <%=activeId%></a>
     <a href ="/Admin/admin/logout"><button class ="btn btn-danger">Logout</button></a>
 </nav>
   <div class ="container-fluid">
     <div class ="row">
         <div class ="col-md-3 col-xs-12">
             <div class ="list-group">
-                <div class ="list-group-item active"><a href ="#" style ="color:white">List Of Books</a></div>
+                <div class ="list-group-item active"><a href ="/admin" style ="color:white">List Of Books</a></div>
                 <div class ="list-group-item"><a href ="/Admin/admin/bookentry">Add New Book</a></div>
                 <div class ="list-group-item"><a href ="/Admin/admin/book_issue">Issue a Book</a></div>
                 <div class ="list-group-item"><a href ="/Admin/admin/student_details">Student Details</a></div>
@@ -76,25 +76,21 @@
         <div class ="col-md-9 col-xs-12">
             <div class ="row text-center">
                 <div class= "col-12">
-                    <h2>Available Books</h2>
+                    <h2>Issue Books</h2>
                 </div>
             </div>
             <div class ="row text-center">
                 <div class= "col-12">
-                    <div class ="row">
-                        <div class ="col-md-3 col-xs-12"></div>
-                        <div class ="col-md-6 col-xs-12">
-                            <div class ="books_enter">
-                                    <form action ="/Admin/admin/bookentry" method ="POST">
-                                    <div class ="form-group"><input class ="form-control" type ="text" name ="book_name" placeholder ="Book's Name" required></div>
-                                    <div class ="form-group"><input class ="form-control" type ="text" name ="author" placeholder ="Author" required></div>
-                                    <div class ="form-group"><input class ="form-control" type ="text" name ="edition" placeholder ="Edition" required></div>
-                                    <div class ="form-group"><input class ="form-control" type ="text" name ="publication" placeholder ="Publication" required></div>
-                                    <div class ="form-group"><input class ="form-control" type ="text" name ="course" placeholder ="Name of the course" required></div>
-                                    <div class ="form-group"><input class ="form-control" type ="text" name ="department" placeholder ="Department" required></div>
-                                    <div class ="form-group"><input class ="form-control" type ="number" name ="book_qty" placeholder ="Number Of Books" required></div>
-                                    <div class ="form-group"><input class ="form-control btn btn-outline-primary" type ="submit" name ="submit"></div>
-                                    </form>
+                    <div class ="row text-center">
+                        <div class ="col-3"></div>
+                        <div class ="col-6">
+                            <div class ="ad-login">
+                                <form action ="/Admin/admin/book_issue" method ="POST">
+                                <div class ="form-group"><input class ="form-control" type ="text" name ="username" placeholder ="Registration No" required></div>
+                                <div class ="form-group"><input class ="form-control" type ="text" name ="book_id" placeholder ="Book Id" required></div>
+                                <div class ="form-group"><input class ="form-control" type ="text" name ="issued_by" placeholder ="Issued By"value="<%=activeId%>" disabled></div>
+                                <div class ="form-group"><input class ="form-control btn btn-outline-primary" type ="submit" name ="submit"></div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -103,7 +99,6 @@
         </div>
     </div>
 </div>
-
 
 
 <%- include('../partials/footer.ejs') %>

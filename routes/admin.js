@@ -11,7 +11,6 @@ var router =express();
 router.use(express.static("public"));
 router.use(bodyparser.urlencoded({extended:true}));
 router.use(methodOverride("_method"));
-
 router.use(cookie());
 router.set('trust proxy', 1) // trust first proxy
 router.use(session({
@@ -29,7 +28,7 @@ router.get('/',(req,res)=>{
 
     sess = req.session;
     console.log(sess.username);
-    if(sess.username) {
+    if(sess.username||sess.head) {
         var sql="SELECT * FROM books ORDER BY book_id";
     connection.query(sql,(err,rows,fields)=>{
         if(err)
@@ -48,9 +47,19 @@ router.get('/',(req,res)=>{
 router.get('/admin/bookentry',(req,res)=>{
     
     sess = req.session;
+    if(sess.username||sess.head) {
+        res.render('admin/bookentry',{active:sess.username});
+    }
+    else
+    res.redirect('/Admin/admin/login');
+   
+});
+router.get('/admin/book_issue',(req,res)=>{
+    
+    sess = req.session;
     // console.log(sess.username);
-    if(sess.username) {
-        res.render('admin/bookentry');
+    if(sess.username||sess.head) {
+        res.render('admin/book_issue',{activeId:sess.username});
     }
     else
     res.redirect('/Admin/admin/login');
@@ -63,27 +72,117 @@ router.get('/admin/login',(req,res)=>{
 
     res.render('admin/login');
 });
+//====================================
+//head Admin routes
+//====================================
+
+router.get('/admin/master_login',(req,res)=>{
+    res.render('admin/master_login');
+});
+router.post('/admin/master_login',(req,res)=>{
+    var headuser=req.body.username;
+    var password=req.body.password;
+    var sql="SELECT * FROM admin WHERE username='"+headuser+"' AND password='"+password+"'";
+    connection.query(sql,(err,rows,fields)=>{
+        if(err)
+        console.log(err);
+        else if(rows.length>0)
+        {
+            sess=req.session;
+            sess.head=headuser;
+            console.log(sess.head);
+            res.redirect('/Admin/admin/list_of_admins');
+        }
+        else{
+            res.redirect('/Admin/admin/master_login');
+        }
+    });
+});
+
+
 router.get('/admin/list_of_admins',(req,res)=>{
 
     sess = req.session;
     // console.log(sess.username);
-    if(sess.username) {
+    if(sess.head) {
         var sql="SELECT * FROM librarian";
         connection.query(sql,(err,rows,fields)=>{
             if(err)
             console.log(err)
             else
-            res.render('admin/list_of_admins',{libdata:rows});
+            res.render('admin/list_of_admins',{libdata:rows,head:sess.head});
         });  
     }
     else
     res.redirect('/Admin/admin/login');
     
 });
-//Basic page rendering routes-------------------------------------------------------------
+//removing librarians form librarian table
+router.get('/admin/master/:id',(req,res)=>{
+    var bid=req.params.id;
+    var sql="DELETE FROM librarian WHERE username='"+bid+"'";
+    connection.query(sql,(err,rows,fields)=>{
+        if(err)
+        {
+            console.log(err);
+            res.redirect('/Admin/admin/list_of_admins');
+        }
+        else
+        {
+            console.log('1 row deleted successfully');
+            res.redirect('/Admin/admin/list_of_admins');
+        }
+    });
+});
+//updating the flag of the librarians
+
+router.post('/admin/master/:id',(req,res)=>{
+    var bid=req.params.id;
+    var sql="SELECT * FROM librarian WHERE username='"+bid+"'";
+    connection.query(sql,(err,rows,fields)=>{
+        if(err)
+        console.log(err);
+        else{
+            if(rows[0].flag==1)
+            {
+                var sql="UPDATE librarian SET flag='0' WHERE username='"+bid+"'";
+                connection.query(sql,(err,results,fields)=>{
+                    if(err)
+                    console.log(err);
+                    else
+                    res.redirect('/Admin/admin/list_of_admins');
+                });
+            }
+            else{
+                var sql="SELECT * FROM librarian WHERE flag='1'";
+                connection.query(sql,(err,rows,fields)=>{
+                    if(err)
+                    console.log(err)
+                    else if(rows.length==2)
+                    {
+                        console.log('maximum limit reached');
+                        res.redirect('/Admin/admin/list_of_admins');
+                    }
+                    else
+                    {
+                        var sql="UPDATE librarian SET flag='1' WHERE username='"+bid+"'";
+                        connection.query(sql,(err,results,fields)=>{
+                            if(err)
+                            console.log(err);
+                            else
+                            res.redirect('/Admin/admin/list_of_admins');
+                        });
+                    }
+                });
+            }
+        }
+    });
+});
+
+//=========================================================================================
 
 //--------------------------------------------------------------------------------
-//Auth routes
+//Auth routes for librarians
 //------------------------------------------------------
 
 router.post('/admin/register',(req,res)=>{
@@ -111,7 +210,7 @@ router.post('/admin/register',(req,res)=>{
 router.post('/admin/login',(req,res)=>{
     var username=req.body.username;
     var pwd=req.body.password;
-    var sql="SELECT * FROM librarian WHERE username='"+username+"'";
+    var sql="SELECT * FROM librarian WHERE username='"+username+"'AND flag='1'";
     connection.query(sql,(err,rows,fields)=>{
         if(err)
         console.log(err)
@@ -119,7 +218,8 @@ router.post('/admin/login',(req,res)=>{
         {
            if(rows.length<=0)
            {
-               console.log('no user found');
+               console.log('no user found or you do not have authorisation');
+               res.redirect('/Admin/admin/login');
            }
            else{
                var hash=rows[0].password;
@@ -206,7 +306,7 @@ router.get('/admin/:id',(req,res)=>{
         }
         else{
             console.log(rows);
-            res.render('admin/updatebook',{bkdata:rows});
+            res.render('admin/updatebook',{bkdata:rows,activeId:sess.username});
         }
     });
 });

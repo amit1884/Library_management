@@ -49,15 +49,16 @@
     </div>
 </div>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    &nbsp;&nbsp;&nbsp;<a class="navbar-brand" href="#"><img src ="../images/images.png"width="40" height ="40">&nbsp;&nbsp;SignedIn As Amit</a>
-  </nav>
+    &nbsp;&nbsp;&nbsp;<a class="navbar-brand" href="#"><img src ="../images/images.png"width="40" height ="40">&nbsp;&nbsp;SignedIn As&nbsp;&nbsp;<%=head%></a>
+    &nbsp;&nbsp;&nbsp;<a href ="/Admin/admin/logout"><button class ="btn btn-danger">Logout</button></a>
+</nav>
   <div class ="container-fluid">
     <div class ="row">
         <div class ="col-md-3 col-xs-12">
             <div class ="list-group">
                 <div class ="list-group-item active"><a href ="/admin" style ="color:white">List Of Books</a></div>
                 <div class ="list-group-item"><a href ="/Admin/admin/bookentry">Add New Book</a></div>
-                <div class ="list-group-item"><a href ="#">Issue a Book</a></div>
+                <div class ="list-group-item"><a href ="/Admin/admin/book_issue">Issue a Book</a></div>
                 <div class ="list-group-item"><a href ="#">Student Details</a></div>
             </div><br>
             <div class ="bk_notification jumbotron">
@@ -100,12 +101,12 @@
                                <td><%=data.mobile%></td>
                                <td><%=data.flag%></td>
                                 <td>
-                                    <form action ="" method ="get">
+                                    <form action ="/Admin/admin/master/<%=data.username%>" method ="POST">
                                         <button type ="submit" value=""name="submit" class ="btn btn-outline-warning">Update</button>
                                     </form>
                                 </td>
                                 <td>
-                                    <form action ="" method ="POST">
+                                    <form action ="/Admin/admin/master/<%=data.username%>" method ="GET">
                                         <button type ="submit" value=""name="submit" class ="btn btn-outline-danger">Delete</button>
                                     </form>
                                 </td>
