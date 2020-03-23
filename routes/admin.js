@@ -50,7 +50,8 @@ router.get('/admin/bookentry',(req,res)=>{
     
     sess = req.session;
     if(sess.username||sess.head) {
-        res.render('admin/bookentry',{active:sess.username});
+        message=req.flash();
+        res.render('admin/bookentry',{active:sess.username,successmsg:message});
     }
     else
     {
@@ -294,9 +295,11 @@ connection.query(sql,(err,rows,fields)=>{
     if(err)
     {
         console.log(err);
+        message=req.flash('error','Error Occurred');
         res.redirect('/admin');
     }
     else{
+        message=req.flash('success','Book Added Successfully');
         console.log('1 row inserted successfully');
         res.redirect('/admin/Admin/bookentry');
     }
@@ -309,10 +312,12 @@ router.post('/admin/:id',(req,res)=>{
         if(err)
         {
             console.log(err);
+            message=req.flash('error','Error Occurred');
             res.redirect('/admin');
         }
         else
         {
+            message=req.flash('success','Book Removed Successfully');
             console.log('1 row deleted successfully');
             res.redirect('/admin');
         }
@@ -348,6 +353,7 @@ connection.query(sql,(err,rows,fields)=>{
         res.redirect('/admin');
     }
     else{
+        logmsg=req.flash('update','Update Successfully');
         console.log('Row updated');
         res.redirect('/admin');
     }
