@@ -23,19 +23,21 @@ router.use(flash());
 
 const saltRounds = 10;
 
-var sess;
+var sess,logmsg,message;
 router.get('/',(req,res)=>{
 
     sess = req.session;
     console.log(sess.username);
     if(sess.username||sess.head) {
+        logmsg=req.flash();
+        console.log(logmsg);
         var sql="SELECT * FROM books ORDER BY book_id";
     connection.query(sql,(err,rows,fields)=>{
         if(err)
         console.log(err);
         else
         {
-            res.render('admin/index',{books:rows,activeId:sess.username});
+            res.render('admin/index',{books:rows,activeId:sess.username,head:sess.head,successmsg:logmsg});
         }
     });
     }
@@ -51,26 +53,33 @@ router.get('/admin/bookentry',(req,res)=>{
         res.render('admin/bookentry',{active:sess.username});
     }
     else
-    res.redirect('/Admin/admin/login');
-   
+    {
+        message=req.flash('msg3','Login Required');
+        res.redirect('/Admin/admin/login');
+    }
 });
 router.get('/admin/book_issue',(req,res)=>{
     
     sess = req.session;
     // console.log(sess.username);
     if(sess.username||sess.head) {
-        res.render('admin/book_issue',{activeId:sess.username});
+        res.render('admin/book_issue',{activeId:sess.username,head:sess.head});
     }
     else
-    res.redirect('/Admin/admin/login');
+    {
+        message=req.flash('msg3','Login Required');
+        res.redirect('/Admin/admin/login');
+    }
+    
    
 });
 router.get('/admin/register',(req,res)=>{
     res.render('admin/register');
 });
 router.get('/admin/login',(req,res)=>{
-
-    res.render('admin/login');
+    message=req.flash();
+   
+    res.render('admin/login',{mess:message});
 });
 //====================================
 //head Admin routes
@@ -91,6 +100,7 @@ router.post('/admin/master_login',(req,res)=>{
             sess=req.session;
             sess.head=headuser;
             console.log(sess.head);
+            logmsg= req.flash('success','Login successfully');
             res.redirect('/Admin/admin/list_of_admins');
         }
         else{
@@ -110,7 +120,11 @@ router.get('/admin/list_of_admins',(req,res)=>{
             if(err)
             console.log(err)
             else
-            res.render('admin/list_of_admins',{libdata:rows,head:sess.head});
+            {
+                logmsg=req.flash();
+                res.render('admin/list_of_admins',{libdata:rows,head:sess.head,successmsg:logmsg});
+            }
+            
         });  
     }
     else
@@ -129,6 +143,7 @@ router.get('/admin/master/:id',(req,res)=>{
         }
         else
         {
+            logmsg=req.flash('delete','Librarian Record Deleted ');
             console.log('1 row deleted successfully');
             res.redirect('/Admin/admin/list_of_admins');
         }
@@ -150,7 +165,10 @@ router.post('/admin/master/:id',(req,res)=>{
                     if(err)
                     console.log(err);
                     else
-                    res.redirect('/Admin/admin/list_of_admins');
+                    {
+                        logmsg=req.flash('updated','Librarian Record Updated ');
+                        res.redirect('/Admin/admin/list_of_admins');
+                    }
                 });
             }
             else{
@@ -160,7 +178,7 @@ router.post('/admin/master/:id',(req,res)=>{
                     console.log(err)
                     else if(rows.length==2)
                     {
-                        console.log('maximum limit reached');
+                        logmsg=req.flash('error','Maximum Number reached');
                         res.redirect('/Admin/admin/list_of_admins');
                     }
                     else
@@ -170,7 +188,11 @@ router.post('/admin/master/:id',(req,res)=>{
                             if(err)
                             console.log(err);
                             else
-                            res.redirect('/Admin/admin/list_of_admins');
+                            {
+                                logmsg=req.flash('updated','Librarian Record Updated ');
+                                res.redirect('/Admin/admin/list_of_admins');
+                            }
+                           
                         });
                     }
                 });
@@ -198,7 +220,7 @@ router.post('/admin/register',(req,res)=>{
             if(err)
             console.log(err);
             else{
-                req.flash('msg1','registered successfully');
+                message=req.flash('msg1','registered successfully');
                 res.redirect('/Admin/admin/login');
             }
         })
@@ -219,21 +241,23 @@ router.post('/admin/login',(req,res)=>{
            if(rows.length<=0)
            {
                console.log('no user found or you do not have authorisation');
+               message= req.flash('error','No user found or you do not have authorisation');
                res.redirect('/Admin/admin/login');
            }
            else{
                var hash=rows[0].password;
-               console.log(hash);
-               console.log(pwd);
             bcrypt.compare(pwd, hash).then(function(result) {
                if(result){
                 sess=req.session;
                 sess.username=username;
+               logmsg= req.flash('success','Login successfully');
+                // console.log(logmsg);
                 console.log(sess.username);
               res.redirect('/admin')
                }
                else{
                 console.log(result);
+                message= req.flash('error','Login Unsuccessfully');
                 console.log('wrong password');
                 res.redirect('/Admin/admin/login');
                }

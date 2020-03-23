@@ -1,12 +1,25 @@
 <%- include('../partials/header.ejs') %>
-
-
+<script type ="text/javascript"src ="../js/jquery.js"></script>
 <div class ="container">
     <div class ="row text-center">
         <div class ="col-4"></div>
         <div class ="col-4">
-            <h1>Admin Login</h1><br>
-           
+            <%if(mess.error){%>
+                <div class="alert alert-danger" id ="errmsg"role="alert">
+                <%=mess.error%>
+                </div>
+                <%}%>
+                <%if(mess.msg1){%>
+                    <div class="alert alert-primary" id ="errmsg"role="alert">
+                    <%=mess.msg1%>
+                    </div>
+                    <%}%>
+                    <%if(mess.msg3){%>
+                        <div class="alert alert-danger" id ="errmsg"role="alert">
+                        <%=mess.msg3%>
+                        </div>
+                        <%}%>
+            <h1>Librarian Login</h1><br>
             <div class ="ad-login">
                 <form action ="/Admin/admin/login" method ="POST">
                 <div class ="form-group"><input class ="form-control" type ="text" name ="username" placeholder ="Username or Email" required></div>
@@ -18,5 +31,7 @@
         </div>
     </div>
 </div>
-
+<script>
+    $('#errmsg').fadeOut(2000);
+    </script>
 <%- include('../partials/footer.ejs') %>

@@ -8,12 +8,12 @@
             <h1>Admin Register</h1><br>
             <div class ="ad-login">
                 <form action ="/Admin/admin/register" method ="POST">
-                <div class ="form-group"><input class ="form-control" type ="text" name ="username" placeholder ="Username" required></div>
-                <div class ="form-group"><input class ="form-control" type ="password" name ="password" placeholder ="Password" required></div>
-                <div class ="form-group"><input class ="form-control" type ="text" name ="first" placeholder ="First Name" required></div>
-                <div class ="form-group"><input class ="form-control" type ="text" name ="last" placeholder ="Last Name" required></div>
-                <div class ="form-group"><input class ="form-control" type ="text" name ="email" placeholder ="Email" required></div>
-                <div class ="form-group"><input class ="form-control" type ="number" name ="mobile" placeholder ="Mobile No" required></div>
+                <div class ="form-group"><input class ="form-control" type ="text" name ="username" placeholder ="Username" required  pattern="[A-Za-z0-9]+" title ="Enter a valid username"></div>
+                <div class ="form-group"><input class ="form-control" type ="password" name ="password" placeholder ="Password (at least 10 characters)" required minlength="10"pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$" title ="Must contain atleast 10 character conatianing digits,upper and lowercase"></div>
+                <div class ="form-group"><input class ="form-control" type ="text" name ="first" placeholder ="First Name" required pattern ="[A-Za-z]+" title ="Only Alphabets are allowed"></div>
+                <div class ="form-group"><input class ="form-control" type ="text" name ="last" placeholder ="Last Name" required pattern ="[A-Za-z]+"title ="Only Alphabets are allowed"></div>
+                <div class ="form-group"><input class ="form-control" type ="text" name ="email" placeholder ="Email" required pattern ="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title ="Input valid email Id"></div>
+                <div class ="form-group"><input class ="form-control" type ="number" name ="mobile" placeholder ="Mobile No" pattern="[789][0-9]{9}" title ="Enter valid  mobile number "required></div>
                 <div class ="form-group"><input class ="form-control btn btn-outline-primary" type ="submit" name ="submit"></div>
                 </form>
             </div>

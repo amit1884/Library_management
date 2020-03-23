@@ -1,96 +1,31 @@
-<%var i=0;%>
-<!doctype html>
-<html>
-<head>
-<meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta http-equiv="X-UA-Compatible" content="ie=edge">
-<title>Home</title>
-<link rel ="stylesheet" href ="../css/bootstrap.min.css">
-<link rel ="stylesheet" href ="../css/fontawesome.min.css">
-<link rel ="stylesheet" href ="../css/animate.css">
-<link rel ="stylesheet" href ="../css/style.css">
-<style>
-    .jumbotron{
-        padding:10px;
-        min-height:250px;
-    }
-    marquee li{
-        padding:15px;
-        color:#413e66;
-    }
-</style>
-</head>
-<body>
-<div class ="container-fluid">
-    <div class= "row text-center">
-        <div class ="col-md-3 col-xs-12"><br>
-            <img src ="../images\Logo_Pinwheel.png" class ="img-responsive" height ="150">
-        </div>
-        <div class ="col-md-6 col-xs-12"><br>
-            <h1>Library Management System</h1>
-            <h3>(NIT Jamshedpur)</h3>
-        </div>
-        <div class ="col-md-3 col-xs-12">
-            <img src ="../images\images.jpg" class ="img-responsive"height ="200">
-        </div>
-    </div>
-</div>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    &nbsp;&nbsp;&nbsp;<a class="navbar-brand" href="#"><img src ="../images/images.png"width="40" height ="40">&nbsp;&nbsp;SignedIn As Amit</a>
-  </nav>
-  <div class ="container-fluid">
-    <div class ="row">
-        <div class ="col-md-3 col-xs-12">
-            <div class ="list-group">
-                <div class ="list-group-item active"><a href ="#" style ="color:white">List Of Books</a></div>
-                <div class ="list-group-item"><a href ="#">Find book</a></div>
-                <div class ="list-group-item"><a href ="#">Check Status</a></div>
-                <div class ="list-group-item"><a href ="#">Download</a></div>
-            </div><br>
-            <div class ="bk_notification jumbotron">
-                <h4 class ="text-center"><u>Notice</u></h4>
-                <ul>
-                <marquee scrolldelay="10" direction="up"height="100px;" onmouseover="stop();" onmouseout="start()">
-                    <li>New books for GATE  will be arriving very soon</li>
-                    <li>More E-books will be added soon</li>
-                    <li>Book Fair on 2<sup>nd</sup> March 2020</li>
-                </marquee>
-                </ul>
+
+<%- include('../partials/header.ejs') %>
+    <div class ="container-fluid">
+        <div class ="row text-center">
+            <div class ="col-md-3 col-xs-12"></div>
+            <div class =" col-md-6 col-xs-12 text-center">
+                <h1>Student Register</h1>
             </div>
         </div>
-        <div class ="col-md-9 col-xs-12">
-            <div class ="row text-center">
-                <div class= "col-12">
-                    <h2>Students Register</h2>
-                </div>
-            </div>
-            <div class ="row text-center">
-                <div class= "col-12">
-                    <div class ="row">
-                        <div class ="col-md-3 col-xs-12"></div>
-                        <div class ="col-md-6 col-xs-12">
-                            <form action ="/Student/students/register" method ="POST">
-                                <div class ="form-group"><input class ="form-control" name ="username" type ="text" placeholder ="Registration No" required></div>
-                                <div class ="form-group"><input class ="form-control" name ="first" type ="text" placeholder ="First Name" required></div>
-                                <div class ="form-group"><input class ="form-control" name ="last" type ="text" placeholder ="Last Name" required></div>
-                                <div class ="form-group"><input class ="form-control" name ="email" type ="text" placeholder ="Email" required></div>
-                                <div class ="form-group"><input class ="form-control" name ="mobile" type ="number" placeholder ="Mobile No" required></div>
-                                <div class ="form-group"><input class ="form-control" name ="password" type ="password" placeholder ="Password" required></div>
-                                <div class ="form-group"><input class ="form-control btn btn-outline-primary" type ="submit" name ="submit"></div>
-                                </form>
-                                <!-- <form action ="/Student/students/register" method ="POST">
-                                    <input type="text" name ="username" placeholder="username">
-                                    <input type="password" name ="password" placeholder="password">
-                                    <button>Submit</button>
-                                </form> -->
-                        </div>
-                    </div>
-              </div>
+    </div><br>
+    <div class="container-fluid">
+        <div class ="row">
+            <div class ="col-md-4 col-xs-12"></div>
+            <div class ="col-md-4 col-xs-12">
+                <form action ="/Student/students/register" method ="POST">
+                    <div class ="form-group"><input class ="form-control" name ="username" type ="text" placeholder ="Registration No" required pattern="[A-Za-z0-9]+" title ="Enter a valid registration Number"></div>
+                    <div class ="form-group"><input class ="form-control" name ="first" type ="text" placeholder ="First Name" required pattern ="[A-Za-z]+" title ="Only Alphabets are allowed"></div>
+                    <div class ="form-group"><input class ="form-control" name ="last" type ="text" placeholder ="Last Name" required pattern ="[A-Za-z]+" title ="Only Alphabets are allowed"></div>
+                    <div class ="form-group"><input class ="form-control" name ="email" type ="text" placeholder ="Email" required pattern ="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title ="Input valid email Id"></div>
+                    <div class ="form-group"><input class ="form-control" name ="mobile" type ="number" placeholder ="Mobile No" required pattern="[789][0-9]{9}" title ="Enter valid  mobile number "></div>
+                    <div class ="form-group"><input class ="form-control" name ="password" type ="password" placeholder ="Password" required minlength="10"pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$" title ="Must contain atleast 10 character conatianing digits,upper and lowercase"></div>
+                    <div class ="form-group"><input class ="form-control btn btn-outline-primary" type ="submit" name ="submit"></div>
+                </form>
             </div>
         </div>
     </div>
-</div>
+                            
+                      
 
 
 <%- include('../partials/footer.ejs') %>

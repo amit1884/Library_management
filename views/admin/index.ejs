@@ -10,6 +10,7 @@
 <link rel ="stylesheet" href ="../css/fontawesome.min.css">
 <link rel ="stylesheet" href ="../css/animate.css">
 <link rel ="stylesheet" href ="../css/style.css">
+<script type ="text/javascript"src ="../js/jquery.js"></script>
 <style>
     table{
         width:100%;
@@ -49,7 +50,7 @@
     </div>
 </div>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    &nbsp;&nbsp;&nbsp;<a class="navbar-brand" href="#"><img src ="../images/images.png"width="40" height ="40">&nbsp;&nbsp;SignedIn As <%=activeId%></a>
+    &nbsp;&nbsp;&nbsp;<a class="navbar-brand" href="#"><img src ="../images/images.png"width="40" height ="40">&nbsp;&nbsp;SignedIn As <%=activeId%><%=head%></a>
     <a href ="/Admin/admin/logout"><button class ="btn btn-danger">Logout</button></a>
 </nav>
   <div class ="container-fluid">
@@ -60,7 +61,9 @@
                 <div class ="list-group-item"><a href ="/Admin/admin/bookentry">Add New Book</a></div>
                 <div class ="list-group-item"><a href ="/Admin/admin/book_issue">Issue a Book</a></div>
                 <div class ="list-group-item"><a href ="/Admin/admin/student_details">Student Details</a></div>
+                <%if(head){%>
                 <div class ="list-group-item"><a href ="/Admin/admin/list_of_admins">List of Librarians</a></div>
+                <%}%>
             </div><br>
             <div class ="bk_notification jumbotron">
                 <h4 class ="text-center"><u>Notice</u></h4>
@@ -76,6 +79,11 @@
         <div class ="col-md-9 col-xs-12">
             <div class ="row text-center">
                 <div class= "col-12">
+                    <%if(successmsg.success){%>
+                    <div class="alert alert-primary" id ="logmsg"role="alert">
+                    <%=successmsg.success%>
+                    </div>
+                    <%}%>
                     <h2>Available Books</h2>
                 </div>
             </div>
@@ -126,5 +134,7 @@
     </div>
 </div>
 
-
+<script>
+$('#logmsg').fadeOut(2000);
+</script>
 <%- include('../partials/footer.ejs') %>

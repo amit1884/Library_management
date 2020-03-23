@@ -10,6 +10,7 @@
 <link rel ="stylesheet" href ="../css/fontawesome.min.css">
 <link rel ="stylesheet" href ="../css/animate.css">
 <link rel ="stylesheet" href ="../css/style.css">
+<script src ="../js/jquery.js"></script>
 <style>
     table{
         width:100%;
@@ -56,7 +57,8 @@
     <div class ="row">
         <div class ="col-md-3 col-xs-12">
             <div class ="list-group">
-                <div class ="list-group-item active"><a href ="/admin" style ="color:white">List Of Books</a></div>
+                <div class ="list-group-item active "><a href ="/Admin/admin/list_of_admins"style ="color:white">List of Librarians</a></div>
+                <div class ="list-group-item"><a href ="/admin" >List Of Books</a></div>
                 <div class ="list-group-item"><a href ="/Admin/admin/bookentry">Add New Book</a></div>
                 <div class ="list-group-item"><a href ="/Admin/admin/book_issue">Issue a Book</a></div>
                 <div class ="list-group-item"><a href ="#">Student Details</a></div>
@@ -75,6 +77,26 @@
         <div class ="col-md-9 col-xs-12">
             <div class ="row text-center">
                 <div class= "col-12">
+                    <%if(successmsg.success){%>
+                        <div class="alert alert-primary" id ="logmsg"role="alert">
+                        <%=successmsg.success%>
+                        </div>
+                        <%}%>
+                        <%if(successmsg.delete){%>
+                            <div class="alert alert-danger" id ="logmsg"role="alert">
+                            <%=successmsg.delete%>
+                            </div>
+                            <%}%>
+                            <%if(successmsg.updated){%>
+                                <div class="alert alert-success" id ="logmsg"role="alert">
+                                <%=successmsg.updated%>
+                                </div>
+                                <%}%>
+                                <%if(successmsg.error){%>
+                                    <div class="alert alert-danger" id ="logmsg"role="alert">
+                                    <%=successmsg.error%>
+                                    </div>
+                                    <%}%>
                     <h2>Librarians</h2>
                 </div>
             </div>
@@ -119,5 +141,7 @@
     </div>
 </div>
 
-
+<script>
+    $('#logmsg').fadeOut(2000);
+    </script>
 <%- include('../partials/footer.ejs') %>

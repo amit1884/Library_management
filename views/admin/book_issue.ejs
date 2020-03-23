@@ -49,7 +49,7 @@
     </div>
 </div>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    &nbsp;&nbsp;&nbsp;<a class="navbar-brand" href="#"><img src ="../images/images.png"width="40" height ="40">&nbsp;&nbsp;SignedIn As <%=activeId%></a>
+    &nbsp;&nbsp;&nbsp;<a class="navbar-brand" href="#"><img src ="../images/images.png"width="40" height ="40">&nbsp;&nbsp;SignedIn As <%=activeId%><%=head%></a>
     <a href ="/Admin/admin/logout"><button class ="btn btn-danger">Logout</button></a>
 </nav>
   <div class ="container-fluid">
@@ -88,7 +88,7 @@
                                 <form action ="/Admin/admin/book_issue" method ="POST">
                                 <div class ="form-group"><input class ="form-control" type ="text" name ="username" placeholder ="Registration No" required></div>
                                 <div class ="form-group"><input class ="form-control" type ="text" name ="book_id" placeholder ="Book Id" required></div>
-                                <div class ="form-group"><input class ="form-control" type ="text" name ="issued_by" placeholder ="Issued By"value="<%=activeId%>" disabled></div>
+                                <div class ="form-group"><input class ="form-control" type ="text" name ="issued_by" placeholder ="Issued By"value="<%=activeId%><%=head%>" disabled></div>
                                 <div class ="form-group"><input class ="form-control btn btn-outline-primary" type ="submit" name ="submit"></div>
                                 </form>
                             </div>
