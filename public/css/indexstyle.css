@@ -1,0 +1,50 @@
+/*
+font-family: 'Merriweather', serif;
+font-family: 'Noto Serif', serif;
+font-family: 'Patua One', cursive;
+font-family: 'Courgette', cursive;
+font-family: 'Lobster Two', cursive;
+font-family: 'Merienda', cursive;
+font-family: 'Prata', serif;
+*/
+
+body{
+    overflow-x:hidden;
+}
+#main_home{
+    background-image:url(/images/hero.jpg);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height:100vh;
+    color:#fff;
+    font-size:23px;
+    /* padding:10px; */
+    overflow-x:hidden;
+}
+
+ #main_head{
+     margin-top:5%;
+    font-size:4em;
+    font-weight:500;
+    color:brown;
+    font-family: 'Merriweather', serif;
+    text-shadow: 2px 2px #123;
+}
+
+.counter-box{
+    padding:20px;
+    margin-top:10%;
+}
+.counter-box i{
+    font-size:50px;
+    margin:20px;
+}
+.card{
+    box-shadow: 7px 8px 9px #3d3737;
+}
+.card img:hover{
+    transform: scale(1.05);
+    transition: ease-in .3s;
+    cursor: pointer;
+}
