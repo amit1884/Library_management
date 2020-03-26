@@ -50,7 +50,7 @@
     </div>
 </div>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    &nbsp;&nbsp;&nbsp;<a class="navbar-brand" href="#"><img src ="../images/images.png"width="40" height ="40">&nbsp;&nbsp;SignedIn As <%=active%></a>
+    &nbsp;&nbsp;&nbsp;<a class="navbar-brand" href="#"><img src ="../images/images.png"width="40" height ="40">&nbsp;&nbsp;SignedIn As <%=active%><%=head%></a>
     <a href ="/Admin/admin/logout"><button class ="btn btn-danger">Logout</button></a>
 </nav>
   <div class ="container-fluid">
@@ -60,8 +60,10 @@
                 <div class ="list-group-item "><a href ="/admin" >List Of Books</a></div>
                 <div class ="list-group-item active"><a href ="/Admin/admin/bookentry" style ="color:white">Add New Book</a></div>
                 <div class ="list-group-item"><a href ="/Admin/admin/book_issue">Issue a Book</a></div>
-                <div class ="list-group-item"><a href ="/Admin/admin/student_details">Student Details</a></div>
-                <div class ="list-group-item"><a href ="/Admin/admin/list_of_admins">List of Librarians</a></div>
+                <div class ="list-group-item"><a href ="/Admin/admin/student_detail">Student Details</a></div>
+                <%if(head){%>
+                    <div class ="list-group-item"><a href ="/Admin/admin/list_of_admins">List of Librarians</a></div>
+                    <%}%>
             </div><br>
             <div class ="bk_notification jumbotron">
                 <h4 class ="text-center"><u>Notice</u></h4>

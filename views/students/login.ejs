@@ -1,10 +1,21 @@
 <%- include('../partials/header.ejs') %>
 
-
+<link rel ="stylesheet" href ="/css/bootstrap.min.css">
+<script src ="/js/jquery.js"></script>
 <div class ="container">
     <div class ="row text-center">
         <div class ="col-4"></div>
         <div class ="col-4">
+             <%if(message.success){%>
+                <div class="alert alert-success" id ="msg"role="alert">
+                <%=message.success%>
+                </div>
+                <%}%>
+                <%if(message.error){%>
+                    <div class="alert alert-danger" id ="msg"role="alert">
+                    <%=message.error%>
+                    </div>
+                    <%}%>
             <h1>Student Login</h1><br>
             <div class ="ad-login">
                 <form action ="/Student/students/login" method ="POST">
@@ -17,5 +28,7 @@
         </div>
     </div>
 </div>
-
+<script>
+    $('#msg').fadeOut(2000);
+    </script>
 <%- include('../partials/footer.ejs') %>

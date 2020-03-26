@@ -51,7 +51,7 @@ router.get('/admin/bookentry',(req,res)=>{
     sess = req.session;
     if(sess.username||sess.head) {
         message=req.flash();
-        res.render('admin/bookentry',{active:sess.username,successmsg:message});
+        res.render('admin/bookentry',{active:sess.username,successmsg:message,head:sess.head});
     }
     else
     {
@@ -62,9 +62,10 @@ router.get('/admin/bookentry',(req,res)=>{
 router.get('/admin/book_issue',(req,res)=>{
     
     sess = req.session;
+    message=req.flash();
     // console.log(sess.username);
     if(sess.username||sess.head) {
-        res.render('admin/book_issue',{activeId:sess.username,head:sess.head});
+        res.render('admin/book_issue',{activeId:sess.username,head:sess.head,mess:message});
     }
     else
     {
@@ -74,9 +75,31 @@ router.get('/admin/book_issue',(req,res)=>{
     
    
 });
+//=============================
+//Student List rendering routes
+//=============================
+router.get('/admin/student_detail',isLoggedIn,(req,res)=>{
+    sess=req.session;
+    var sql="SELECT * FROM students ORDER BY registration_no";
+    connection.query(sql,(err,rows,fields)=>{
+        if(err)
+        {
+            console.log(err);
+        }
+        else{
+            res.render('admin/student_detail',{students:rows,activeId:sess.username,head:sess.head});
+        }
+    });
+});
+//=============================
+//Registration rendering routes
+//=============================
 router.get('/admin/register',(req,res)=>{
     res.render('admin/register');
 });
+//=============================
+//Login rendering routes
+//=============================
 router.get('/admin/login',(req,res)=>{
     message=req.flash();
    
@@ -280,7 +303,7 @@ router.get('/admin/logout',(req,res) => {
 });
 
 //----------------------------------------------------------------------------
-//Data manipulating routes
+//Book Entry  routes
 //----------------------------------------------------------------------------
 router.post('/admin/bookentry',(req,res)=>{
 var bk_name=req.body.book_name;
@@ -290,21 +313,85 @@ var pub=req.body.publication;
 var course=req.body.course;
 var dept=req.body.department;
 var bk_qty=req.body.book_qty;
-var sql="INSERT INTO books (book_name,book_author,book_publication,book_edition,book_course,book_department,book_qty) VALUES('"+bk_name+"','"+author+"','"+pub+"','"+edt+"','"+course+"','"+dept+"','"+bk_qty+"')";
-connection.query(sql,(err,rows,fields)=>{
-    if(err)
-    {
+if(edt>0&&bk_qty>0)
+{
+    var sql="INSERT INTO books (book_name,book_author,book_publication,book_edition,book_course,book_department,book_qty) VALUES('"+bk_name+"','"+author+"','"+pub+"','"+edt+"','"+course+"','"+dept+"','"+bk_qty+"')";
+    connection.query(sql,(err,rows,fields)=>{
+        if(err)
+        {
+            console.log(err);
+            message=req.flash('error','Error Occurred');
+            res.redirect('/admin');
+        }
+        else{
+            message=req.flash('success','Book Added Successfully');
+            console.log('1 row inserted successfully');
+            res.redirect('/Admin/admin/bookentry');
+        }
+    });
+}
+else{
+    message=req.flash('error','Enter Positive Numbers');
+    res.redirect('/Admin/admin/bookentry');
+}
+
+});
+
+//============================================
+//Book Issue route
+//============================================
+
+router.post('/admin/book_issue',(req,res)=>{
+
+    var username=req.body.username;
+    var book_id=req.body.book_id;
+    var issue_by=req.body.issued_by;
+    console.log(req.body.issued_by);
+    var return_date=req.body.return_date;
+
+    var sql="SELECT * FROM students WHERE registration_no='"+username+"'";
+    connection.query(sql,(err,rows,fields)=>{
+        if(err)
         console.log(err);
-        message=req.flash('error','Error Occurred');
-        res.redirect('/admin');
-    }
-    else{
-        message=req.flash('success','Book Added Successfully');
-        console.log('1 row inserted successfully');
-        res.redirect('/admin/Admin/bookentry');
-    }
+        else{
+            if(rows.length>0){
+                var sql="SELECT * FROM books WHERE book_id='"+book_id+"'"
+                connection.query(sql,(err,rows,field)=>{
+                    if(err)
+                    {
+                        console.log(err)
+                    }
+                    else{
+                        if(rows.length>0){
+                            var sql="INSERT INTO issuebooks(registration_no,book_id,return_date,issued_by) VALUES('"+username+"','"+book_id+"','"+return_date+"','"+issue_by+"')";
+                            connection.query(sql,(err,rows,fields)=>{
+                                if(err){
+                                    console.log(err);
+                                }
+                                else{
+                                    console.log("inserted");
+                                    message=req.flash('success','Book issued successfully');
+                                    res.redirect('/Admin/admin/book_issue');
+                                }
+                            });
+                        }
+                        else{
+                            message=req.flash('error','No Book found of specified book id');
+                            res.redirect('/Admin/admin/book_issue');
+                        }
+                    }
+                });
+            }
+            else{
+                message=req.flash('error','No user found');
+                res.redirect('/Admin/admin/book_issue');
+            }
+        }
+    });
 });
-});
+//=====================================
+//Book Remove route(backend)
+//=====================================
 router.post('/admin/:id',(req,res)=>{
     var bid=req.params.id;
     var sql="DELETE FROM books WHERE book_id='"+bid+"'";
@@ -323,6 +410,9 @@ router.post('/admin/:id',(req,res)=>{
         }
     });
 });
+//====================================
+//Book update rendering route(frontend)
+//=====================================
 router.get('/admin/:id',(req,res)=>{
     var bkid=req.params.id;
     console.log(bkid);
@@ -340,12 +430,17 @@ router.get('/admin/:id',(req,res)=>{
     });
 });
 
+//====================================
+//Book update route(backend)
+//=====================================
 router.put('/admin/update/:id',(req,res)=>{
 
     var upedt=req.body.edition;
     var updata=req.body.book_qty;
 console.log(updata);
-var sql="UPDATE books SET book_qty='"+updata+"',book_edition='"+upedt+"' WHERE book_id='"+req.params.id+"'";
+if(upedt>0&&updata>0)
+{
+    var sql="UPDATE books SET book_qty='"+updata+"',book_edition='"+upedt+"' WHERE book_id='"+req.params.id+"'";
 connection.query(sql,(err,rows,fields)=>{
     if(err)
     {
@@ -358,6 +453,23 @@ connection.query(sql,(err,rows,fields)=>{
         res.redirect('/admin');
     }
 });
+}
+else{
+    logmsg=req.flash('error','Enter Positive Value');
+    res.redirect('/admin');
+}
+
 });
+
+//middleware to check user logged in or not
+function isLoggedIn(req,res,next)
+{
+    sess=req.session;
+    if(sess.username||sess.head){
+        return next();
+    }
+    message=req.flash('error','Login Required')
+    res.redirect("/Admin/admin/login");
+}
 
 module.exports=router;
