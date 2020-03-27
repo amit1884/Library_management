@@ -36,7 +36,7 @@ router.get('/students/',isLoggedIn,(req,res)=>{
     if(sess.username)
     {
           logmsg=req.flash();
-        var sql ="SELECT * FROM books";
+        var sql ="SELECT * FROM books ORDER BY book_id";
         connection.query(sql,(err,rows,field)=>{
             if(err){
                 console.log(err);

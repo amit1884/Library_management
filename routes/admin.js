@@ -78,8 +78,9 @@ router.get('/admin/book_issue',(req,res)=>{
 //=============================
 //Student List rendering routes
 //=============================
-router.get('/admin/student_detail',isLoggedIn,(req,res)=>{
+router.get('/admin/list_of_students',isLoggedIn,(req,res)=>{
     sess=req.session;
+    // var sql="SELECT * FROM students ORDER BY registration_no";
     var sql="SELECT * FROM students ORDER BY registration_no";
     connection.query(sql,(err,rows,fields)=>{
         if(err)
@@ -87,13 +88,30 @@ router.get('/admin/student_detail',isLoggedIn,(req,res)=>{
             console.log(err);
         }
         else{
-            res.render('admin/student_detail',{students:rows,activeId:sess.username,head:sess.head});
+            // res.send(rows);
+            res.render('admin/list_of_students',{students:rows,activeId:sess.username,head:sess.head});
         }
     });
 });
-//=============================
+//======================================================================================
+//Student's details post  routes
+//======================================================================================
+router.get('/admin/student_details/:id',isLoggedIn,(req,res)=>{
+    var reg_id=req.params.id;
+    var sql="SELECT * FROM students LEFT JOIN issuebooks ON students.registration_no=issuebooks.reg_no WHERE students.registration_no='"+reg_id+"'";
+    connection.query(sql,(err,rows,fields)=>{
+        if(err)
+        console.log(err);
+        else{
+            res.render('admin/student_detail',{students:rows,activeId:sess.username,head:sess.headuser});
+        }
+    });
+});
+
+
+//===============================================================
 //Registration rendering routes
-//=============================
+//===============================================================
 router.get('/admin/register',(req,res)=>{
     res.render('admin/register');
 });
@@ -363,7 +381,7 @@ router.post('/admin/book_issue',(req,res)=>{
                     }
                     else{
                         if(rows.length>0){
-                            var sql="INSERT INTO issuebooks(registration_no,book_id,return_date,issued_by) VALUES('"+username+"','"+book_id+"','"+return_date+"','"+issue_by+"')";
+                            var sql="INSERT INTO issuebooks(reg_no,book_id,return_date,issued_by) VALUES('"+username+"','"+book_id+"','"+return_date+"','"+issue_by+"')";
                             connection.query(sql,(err,rows,fields)=>{
                                 if(err){
                                     console.log(err);

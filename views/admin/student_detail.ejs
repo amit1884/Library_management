@@ -1,4 +1,4 @@
-<%var i=0;%>
+<%var i=0; totalfine=0;%>
 <!doctype html>
 <html>
 <head>
@@ -6,21 +6,21 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <title>Home</title>
-<link rel ="stylesheet" href ="../css/bootstrap.min.css">
-<link rel ="stylesheet" href ="../css/fontawesome.min.css">
-<link rel ="stylesheet" href ="../css/animate.css">
-<link rel ="stylesheet" href ="../css/style.css">
+<link rel ="stylesheet" href ="../../../css/bootstrap.min.css">
+<link rel ="stylesheet" href ="../../../css/fontawesome.min.css">
+<link rel ="stylesheet" href ="../../../css/animate.css">
+<link rel ="stylesheet" href ="../../../css/style.css">
 <script src ="/js/jquery.js"></script>
 <style>
-    table{
+    .book_detail{
         width:100%;
         padding:5px;
     }
-    th,td{
+    .book_detail th,td{
         padding:5px;
         border:1px solid black;
     }
-    th{
+    .book_detail th{
         background-color:#f5f8fd;
         color:#000;
     }
@@ -32,25 +32,30 @@
         padding:15px;
         color:#413e66;
     }
+    .stud_detail td,th,tr{
+        border:none;
+        padding:10px;
+        font-size:18px;
+    }
 </style>
 </head>
 <body>
 <div class ="container-fluid">
     <div class= "row text-center">
         <div class ="col-md-3 col-xs-12"><br>
-            <img src ="../images\Logo_Pinwheel.png" class ="img-responsive" height ="150">
+            <img src ="../../../images\Logo_Pinwheel.png" class ="img-responsive" height ="150">
         </div>
         <div class ="col-md-6 col-xs-12"><br>
             <h1>Library Management System</h1>
             <h3>(NIT Jamshedpur)</h3>
         </div>
         <div class ="col-md-3 col-xs-12">
-            <img src ="../images\images.jpg" class ="img-responsive"height ="200">
+            <img src ="../../../images\images.jpg" class ="img-responsive"height ="200">
         </div>
     </div>
 </div>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    &nbsp;&nbsp;&nbsp;<a class="navbar-brand" href="#"><img src ="../images/images.png"width="40" height ="40">&nbsp;&nbsp;SignedIn As <%=activeId%><%=head%></a>
+    &nbsp;&nbsp;&nbsp;<a class="navbar-brand" href="#"><img src ="../../../images/images.png"width="40" height ="40">&nbsp;&nbsp;SignedIn As <%=activeId%><%=head%></a>
     <a href ="/Admin/admin/logout"><button class ="btn btn-danger">Logout</button></a>
 </nav>
   <div class ="container-fluid">
@@ -60,7 +65,7 @@
                 <div class ="list-group-item"><a href ="/admin">List Of Books</a></div>
                 <div class ="list-group-item"><a href ="/Admin/admin/bookentry">Add New Book</a></div>
                 <div class ="list-group-item"><a href ="/Admin/admin/book_issue">Issue a Book</a></div>
-                <div class ="list-group-item active"><a href ="/Admin/admin/student_detail" style ="color:white">Student Details</a></div>
+                <div class ="list-group-item active"><a href ="/Admin/admin/list_of_students" style ="color:white">List of Students</a></div>
                 <%if(head){%>
                     <div class ="list-group-item"><a href ="/Admin/admin/list_of_admins">List of Librarians</a></div>
                 <%}%>
@@ -79,33 +84,81 @@
         <div class ="col-md-9 col-xs-12">
            <div class ="row text-center">
                <div class ="col-md-12 col-xs-12">
-                  <h2><u>List Of Students</u></h2> 
+                  <h2><u>Student's Detail</u></h2> 
+               </div>
+           </div><br><br>
+           <div class ="container-fluid bg-light">
+               <div class ="row">
+                   <div class ="col-md-12 col-xs-12">
+                    <table class ="stud_detail">
+                        <tr>
+                            <th>Name :</th>
+                            <td><%=students[0].first%>&nbsp;<%=students[0].last%></td>
+                        </tr>
+                        <tr>
+                         <th>Registration No :</th>
+                         <td><%=students[0].registration_no%></td>
+                     </tr>
+                     <tr>
+                         <th>Branch :</th>
+                         <td><%=students[0].branch%></td>
+                     </tr>
+                     <tr>
+                         <th>Email :</th>
+                         <td><%=students[0].email%></td>
+                     </tr>
+                     <tr>
+                         <th>Mobile No :</th>
+                         <td><%=students[0].mobile_no%></td>
+                     </tr>
+                    </table>
+                   </div>
                </div>
            </div>
-           <table class ="text-center">
-               <tr>
-                   <th>Sr.No</th>
-                   <th>Registration No.</th>
-                   <th>Name</th>
-                   <th>Branch</th>
-                   <th>Email</th>
-                   <th>Mobile</th>
-                   <th>View Details</th>
-               </tr>
-               <%students.forEach((data)=>{ i++;%>
+            <br>
+           <div class ="text-center bg-light">
+            <h4>Book Issue Details</h4>
+           </div>
+           <br>
+           <%if(students[0].reg_no){%>
+            <table class ="text-center book_detail">
+                <tr>
+                <th>Sr.No.</th>
+                <th>Book Id</th>
+                <th>Issue By</th>
+                <th>Issued Date</th>
+                <th>Return Date</th>
+                <th>Fine</th>
+                </tr>
+                <%students.forEach((data)=>{ i++;%>
+                    
                     <tr>
-                    <td><%=i%></td>
-                    <td><%=data.registration_no%></td>
-                    <td><%=data.first%>&nbsp;&nbsp;<%=data.last%></td>
-                    <td><%=data.branch%></td>
-                    <td><%=data.email%></td>
-                    <td><%=data.mobile_no%></td>
-                    <td><form action= "/admin/student_details/<%=data.registration_no%>" method ="POST">
-                        <button name ="submit" type ="submit" class ="btn btn-outline-success">View</button>
-                    </form></td>
+                        <td><%=i%></td>
+                        <td><%=data.book_id%></td>
+                        <td><%=data.issued_by%></td>
+                        <td><%=data.issue_date%></td>
+                        <td><%=data.return_date%></td>
+                        <td><%=data.fine%></td>
                     </tr>
-              <% })%>
-           </table>
+                    <%totalfine=totalfine+data.fine%>
+               <% })%>
+               <tr>
+                   <th colspan="3"style ="font-size:18px;padding:10px">Total Fine</th>
+                       <%if(totalfine==0){%>
+                        <td colspan="3">
+                        <%=totalfine%>
+                    </td>
+                        <%}else{%>
+                            <td colspan="3" style ="font-size:20px;color:red;">
+                            <%=totalfine%>
+                            </td>
+                        <%}%>
+                
+               </tr>
+            </table>
+            <%}else{%>
+                <h3 class ="text-center">No Book Issued</h3>
+                <%}%>
         </div>
     </div>
 </div>
