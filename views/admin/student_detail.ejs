@@ -140,8 +140,8 @@
                         <td><%=data.issue_date%></td>
                         <td><%=data.return_date%></td>
                         <td>Rs.<%=data.fine%></td>
-                        <td><form action ="/Admin/admin/book_return/<%=data.boo_id%>" method ="POST">
-                        <button class ="btn btn-outline-primary" name ="submit">Return</button></form></td>
+                        <td><form action ="/Admin/admin/book_return/<%=data.book_id%>" method ="POST">
+                        <button class ="btn btn-outline-primary" value ="<%=data.reg_no%>"name ="submit">Return</button></form></td>
                     </tr>
                     <%totalfine=totalfine+data.fine%>
                <% })%>

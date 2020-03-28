@@ -77,12 +77,11 @@ router.get('/admin/book_issue',(req,res)=>{
     
    
 });
-//=============================
+//====================================================================
 //Student List rendering routes
-//=============================
+//=====================================================================
 router.get('/admin/list_of_students',isLoggedIn,(req,res)=>{
     sess=req.session;
-    // var sql="SELECT * FROM students ORDER BY registration_no";
     var sql="SELECT * FROM students ORDER BY registration_no";
     connection.query(sql,(err,rows,fields)=>{
         if(err)
@@ -90,7 +89,6 @@ router.get('/admin/list_of_students',isLoggedIn,(req,res)=>{
             console.log(err);
         }
         else{
-            // res.send(rows);
             message=req.flash();
             res.render('admin/list_of_students',{students:rows,activeId:sess.username,head:sess.head,message:message});
         }
@@ -180,7 +178,9 @@ router.post('/admin/master_login',(req,res)=>{
         }
     });
 });
-
+//========================================================
+//List of admin rendering route
+//========================================================
 
 router.get('/admin/list_of_admins',(req,res)=>{
 
@@ -203,7 +203,9 @@ router.get('/admin/list_of_admins',(req,res)=>{
     res.redirect('/Admin/admin/login');
     
 });
+//=======================================================================
 //removing librarians form librarian table
+//=======================================================================
 router.get('/admin/master/:id',(req,res)=>{
     var bid=req.params.id;
     var sql="DELETE FROM librarian WHERE username='"+bid+"'";
@@ -221,8 +223,9 @@ router.get('/admin/master/:id',(req,res)=>{
         }
     });
 });
+//=========================================================================
 //updating the flag of the librarians
-
+//=========================================================================
 router.post('/admin/master/:id',(req,res)=>{
     var bid=req.params.id;
     var sql="SELECT * FROM librarian WHERE username='"+bid+"'";
@@ -299,7 +302,9 @@ router.post('/admin/register',(req,res)=>{
     });
 });
 
-
+//=======================================================
+//Librarian login route(backend)
+//=======================================================
 
 router.post('/admin/login',(req,res)=>{
     var username=req.body.username;
@@ -340,6 +345,9 @@ router.post('/admin/login',(req,res)=>{
     })
     
 })
+//=====================================================================
+//Logout Route
+//=====================================================================
 router.get('/admin/logout',(req,res) => {
     req.session.destroy((err) => {
         if(err) {
@@ -385,9 +393,9 @@ else{
 
 });
 
-//============================================
-//Book Issue route
-//============================================
+//==============================================================================
+//Book Issue route(backend)
+//==============================================================================
 
 router.post('/admin/book_issue',(req,res)=>{
 
@@ -448,9 +456,50 @@ router.post('/admin/book_issue',(req,res)=>{
         }
     });
 });
-//=====================================
+
+//===========================================================================
+//Book Return Route
+//===========================================================================
+
+router.post('/admin/book_return/:id',(req,res)=>{
+    var bk_id=req.params.id;
+    var reg=req.body.submit;
+    console.log(bk_id);
+    console.log(reg);
+    var sql="DELETE FROM issuebooks WHERE book_id='"+bk_id+"' AND reg_no='"+reg+"'";
+    connection.query(sql,(err,rows,fields)=>{
+        if(err)
+        console.log(err);
+        else{
+            var sql="SELECT * FROM books WHERE book_id='"+bk_id+"'";
+            connection.query(sql,(err,rows,fields)=>{
+                if(err)
+                console.log(err);
+                else{
+                    var qty=rows[0].book_qty;
+                    console.log(qty);
+                    qty=qty+1;
+                    console.log(qty);
+                    var sql="UPDATE books SET book_qty='"+qty+"' WHERE book_id='"+bk_id+"'";
+                    connection.query(sql,(err,rows,fields)=>{
+                        if(err){
+                            console.log(err)
+                        }
+                        else{
+                            message=req.flash('success','Book returned');
+                            res.redirect('/Admin/admin/list_of_students')
+                        }
+                    });
+                }
+            });
+        }
+    });
+});
+
+
+//========================================================================================
 //Book Remove route(backend)
-//=====================================
+//========================================================================================
 router.post('/admin/:id',(req,res)=>{
     var bid=req.params.id;
     var sql="DELETE FROM books WHERE book_id='"+bid+"'";
@@ -469,9 +518,9 @@ router.post('/admin/:id',(req,res)=>{
         }
     });
 });
-//====================================
+//==================================================================================
 //Book update rendering route(frontend)
-//=====================================
+//==================================================================================
 router.get('/admin/:id',(req,res)=>{
     var bkid=req.params.id;
     console.log(bkid);
@@ -489,9 +538,9 @@ router.get('/admin/:id',(req,res)=>{
     });
 });
 
-//====================================
+//=======================================================================
 //Book update route(backend)
-//=====================================
+//=======================================================================
 router.put('/admin/update/:id',(req,res)=>{
 
     var upedt=req.body.edition;
@@ -520,8 +569,9 @@ else{
 });
 
 
-
+//==================================================================
 //middleware to check user logged in or not
+//==================================================================
 function isLoggedIn(req,res,next)
 {
     sess=req.session;
