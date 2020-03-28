@@ -63,9 +63,21 @@ router.get('/students/register',(req,res)=>{
     res.render('students/register');
 });
 router.get('/students/search',isLoggedIn,(req,res)=>{
-    res.render('students/search');
+    res.render('students/search',{currentuser:sess.username});
 });
-
+//==============================================
+router.get('/students/student_detail/:id',isLoggedIn,(req,res)=>{
+    var reg_id=req.params.id;
+    var sql="SELECT * FROM students LEFT JOIN issuebooks ON students.registration_no=issuebooks.reg_no WHERE students.registration_no='"+reg_id+"'";
+    connection.query(sql,(err,rows,fields)=>{
+        if(err)
+        console.log(err);
+        else{
+            res.render('students/student_detail',{students:rows,currentuser:sess.username});
+        }
+    });
+});
+//==============================================
 router.post('/students/register',(req,res)=>{
     var user=req.body.username;
     var first=req.body.first;

@@ -1,5 +1,7 @@
 var express =require('express');
 var path=require('path');
+var json2csv = require('json2csv').parse;
+var fs = require('fs');
 var session=require('express-session');
 var cookie=require('cookie-parser');
 var flash=require('connect-flash');
@@ -89,10 +91,38 @@ router.get('/admin/list_of_students',isLoggedIn,(req,res)=>{
         }
         else{
             // res.send(rows);
-            res.render('admin/list_of_students',{students:rows,activeId:sess.username,head:sess.head});
+            message=req.flash();
+            res.render('admin/list_of_students',{students:rows,activeId:sess.username,head:sess.head,message:message});
         }
     });
 });
+
+
+//==================================================================================
+//Download CSV
+//==================================================================================
+router.get('/admin/download',(req,res)=>{
+
+    var sql="SELECT issuebooks.reg_no,issuebooks.book_id,issuebooks.issue_date,issuebooks.return_date,issuebooks.issued_by,issuebooks.fine,students.first,students.last,students.branch,students.email,students.mobile_no FROM issuebooks LEFT JOIN students ON issuebooks.reg_no=students.registration_no";
+    connection.query(sql,(err,rows,fields)=>{
+        if(err)
+        console.log(err);
+        else{
+            var fields = ['reg_no','first','last','branch','email','mobile_no','book_id','issue_date','return_date','issued_by','fine'];
+            var data=rows;
+            var date =new Date();
+            var timestamp=date.getTime();
+            var csv = json2csv(data,{fields: fields });
+            fs.writeFile('../files'+timestamp+'.csv', csv, function(err) {
+            if (err) throw err;
+            console.log('converted');
+            message=req.flash('success','Coverted to CSV');
+             res.redirect('/Admin/admin/list_of_students');
+            });
+        }
+    });
+
+})
 //======================================================================================
 //Student's details post  routes
 //======================================================================================
@@ -103,7 +133,7 @@ router.get('/admin/student_details/:id',isLoggedIn,(req,res)=>{
         if(err)
         console.log(err);
         else{
-            res.render('admin/student_detail',{students:rows,activeId:sess.username,head:sess.headuser});
+            res.render('admin/student_detail',{students:rows,activeId:sess.username,head:sess.head});
         }
     });
 });
@@ -380,16 +410,27 @@ router.post('/admin/book_issue',(req,res)=>{
                         console.log(err)
                     }
                     else{
-                        if(rows.length>0){
+                        if(rows.length>0&&rows[0].book_qty>0){
+                            var bk_qty=rows[0].book_qty;
+                            console.log('book_id : '+ bk_qty);
                             var sql="INSERT INTO issuebooks(reg_no,book_id,return_date,issued_by) VALUES('"+username+"','"+book_id+"','"+return_date+"','"+issue_by+"')";
                             connection.query(sql,(err,rows,fields)=>{
                                 if(err){
                                     console.log(err);
                                 }
                                 else{
-                                    console.log("inserted");
-                                    message=req.flash('success','Book issued successfully');
-                                    res.redirect('/Admin/admin/book_issue');
+                                    bk_qty--;
+                                    console.log('book_id : '+ bk_qty);
+                                    var sql="UPDATE books SET book_qty='"+bk_qty+"' WHERE book_id='"+book_id+"'";
+                                    connection.query(sql,(err,rows,fields)=>{
+                                        if(err)
+                                        console.log(err);
+                                        else{
+                                            console.log("inserted and decreased book qty");
+                                            message=req.flash('success','Book issued successfully');
+                                            res.redirect('/Admin/admin/book_issue');
+                                        }
+                                    });
                                 }
                             });
                         }
@@ -476,8 +517,9 @@ else{
     logmsg=req.flash('error','Enter Positive Value');
     res.redirect('/admin');
 }
-
 });
+
+
 
 //middleware to check user logged in or not
 function isLoggedIn(req,res,next)
