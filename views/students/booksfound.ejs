@@ -49,7 +49,7 @@
     </div>
 </div>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    &nbsp;&nbsp;&nbsp;<a class="navbar-brand" href="#"><img src ="../images/images.png"width="40" height ="40">&nbsp;&nbsp;SignedIn As&nbsp;<%=currentUser.firstName%></a>
+    &nbsp;&nbsp;&nbsp;<a class="navbar-brand" href="#"><img src ="../images/images.png"width="40" height ="40">&nbsp;&nbsp;SignedIn As&nbsp;<%=currentuser%></a>
     &nbsp;&nbsp;&nbsp;<form action ="/Student/students/logout"method ="GET">
         <button type ="submit" name ="submit"class ="btn btn-danger">Logout</button>
     </form>
@@ -63,7 +63,15 @@
                 <div class ="list-group-item"><a href ="/Student/students/student_detail/<%=currentuser%>">Check Status</a></div>
                 <div class ="list-group-item"><a href ="#">Download</a></div>
                 <div class ="list-group-item"></div>
-            </div><br>
+            </div>
+            <br>
+            <div class ="searchbar">
+                <form action ="/Student/students/findbooks"method ="GET">
+                    <div class ="form-group"><input type ="text" name ="findtext" placeholder="Enter book or author name" class ="form-control" required pattern="[A-Za-z ]+" title ="Only alphabets are allowed"></div>
+                    <div class ="form-group"><button type ="submit" name ="submit"class ="btn btn-outline-primary" style ="width:100%;" class ="form-control">Search</button></div>
+                </form>
+            </div>
+            <br>
             <div class ="bk_notification jumbotron">
                 <h4 class ="text-center"><u>Notice</u></h4>
                 <ul>

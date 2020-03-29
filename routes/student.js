@@ -1,5 +1,6 @@
 var express =require('express');
 var path=require('path');
+var FuzzySearch=require('fuzzy-search');
 var methodOverride=require("method-override");
 var bodyparser=require('body-parser');
 var connection=require('../databaseconfig/configDb');
@@ -39,14 +40,14 @@ router.get('/students/',isLoggedIn,(req,res)=>{
 
     if(sess.username)
     {
-          logmsg=req.flash();
+          message=req.flash();
         var sql ="SELECT * FROM books ORDER BY book_id";
         connection.query(sql,(err,rows,field)=>{
             if(err){
                 console.log(err);
             }
             else{
-                res.render('students/index',{book:rows,currentuser:sess.username,mess:logmsg});
+                res.render('students/index',{book:rows,currentuser:sess.username,mess:message});
             }
         });
     
@@ -93,14 +94,14 @@ router.get('/students/student_detail/:id',isLoggedIn,(req,res)=>{
 
 router.get('/students/downloadpdf/:id',(req,res)=>{
  var reg_id=req.params.id;
-var sql="SELECT issuebooks.reg_no,issuebooks.book_id,issuebooks.issue_date,issuebooks.return_date,issuebooks.issued_by,issuebooks.fine,students.first,students.last,students.branch,students.email,students.mobile_no FROM issuebooks LEFT JOIN students ON issuebooks.reg_no=students.registration_no WHERE issuebooks.reg_no='"+reg_id+"'";
+var sql="SELECT issuebooks.reg_no,issuebooks.book_id,issuebooks.issue_date,issuebooks.return_date,issuebooks.issued_by,issuebooks.fine,students.first,students.last,students.branch,students.email,students.mobile_no FROM students LEFT JOIN issuebooks ON issuebooks.reg_no=students.registration_no WHERE students.registration_no='"+reg_id+"'";
 connection.query(sql,(err,row,fields)=>{
     if(err)
     console.log(err);
     else{
 
         const doc = new PDFDocument();
-        const regid=row[0].reg_no;
+        const regid=reg_id;
         const name=row[0].first+' '+row[0].last;
         const branch=row[0].branch;
         const Email=row[0].email;
@@ -141,7 +142,8 @@ connection.query(sql,(err,row,fields)=>{
          .text('Book Issue Detail',220)
          .moveDown(0.8);
         var i=1,totalfine=0;
-
+        if(row[0].book_id)
+        {
        for(i=0;i<row.length;i++)
        {
          doc
@@ -163,9 +165,41 @@ connection.query(sql,(err,row,fields)=>{
          .fillColor('red')
          .text(`Total Fine :     ${totalfine}`)
          .moveDown(0.5);
+    }
+    else
+    {
+        doc
+        .fontSize(20)
+        .fillColor('red')
+        .text('No Pending Dues',230);
+    }
        doc.end();
        
-           res.send(row);
+           message =req.flash('success','Pdf Downloaded Successfully');
+           res.redirect('/Student/students/')
+    }
+});
+});
+
+
+//==================================================================================
+//Book Search Route(backend)[Fuzzy Search]
+//==================================================================================
+router.get('/students/findbooks',isLoggedIn,(req,res)=>{
+
+var findbk=req.query.findtext;
+var sql="SELECT * FROM books ORDER BY book_id";
+connection.query(sql,(err,rows,fields)=>{
+
+    if(err)
+    console.log(err)
+    else{
+        const searcher = new FuzzySearch(rows, ['book_author','book_name'], {
+            caseSensitive: false,
+          });
+          const result = searcher.search(findbk);
+          console.log(result);
+          res.render('students/booksfound',{foundbooks:result,currentuser:sess.username})
     }
 });
 });
@@ -196,6 +230,10 @@ router.post('/students/register',(req,res)=>{
 });
 
 
+//=====================================================================================
+//Login Route(backend)
+//=====================================================================================
+
 router.post('/students/login',(req,res)=>{
     var username=req.body.username;
     var pwd=req.body.password;
@@ -215,11 +253,11 @@ router.post('/students/login',(req,res)=>{
                var hash=rows[0].password;
             bcrypt.compare(pwd, hash).then(function(result) {
                if(result){
+                message= req.flash('success','Login Successfully');
                 sess=req.session;
                 sess.username=username;
-               logmsg= req.flash('logsuccess','Login Successfully');
                 console.log(req.flash());
-              res.redirect('/Student/students/')
+                 res.redirect('/Student/students/')
                }
                else{
                 console.log(result);
@@ -234,7 +272,9 @@ router.post('/students/login',(req,res)=>{
     })
     
 })
-
+//========================================================================================
+//Logout Route
+//========================================================================================
 router.get('/students/logout',(req,res) => {
     req.session.destroy((err) => {
         if(err) {
@@ -248,8 +288,9 @@ router.get('/students/logout',(req,res) => {
 
 
 
-
+//=======================================================================================
 //middleware to check user logged in or not
+//=======================================================================================
 function isLoggedIn(req,res,next)
 {
     sess=req.session;
@@ -259,4 +300,7 @@ function isLoggedIn(req,res,next)
     message=req.flash('error','Login Required')
     res.redirect("/Student/students/login");
 }
+
+
+
 module.exports=router;
