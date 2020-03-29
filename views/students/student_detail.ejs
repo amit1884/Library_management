@@ -65,7 +65,6 @@
                 <div class ="list-group-item"><a href ="/Student/students/">List Of Books</a></div>
                 <div class ="list-group-item"><a href ="/Student/students/search">Find book</a></div>
                 <div class ="list-group-item active"><a href ="#" style ="color:white">Check Status</a></div>
-                <div class ="list-group-item"><a href ="#">Download</a></div>
             </div><br>
             <div class ="bk_notification jumbotron">
                 <h4 class ="text-center"><u>Notice</u></h4>
@@ -156,6 +155,15 @@
             <%}else{%>
                 <h3 class ="text-center">No Book Issued</h3>
                 <%}%>
+                <br>
+                <div class ="text-center">
+                    <a href="/Student/students/downloadpdf/<%=students[0].reg_no%>">
+                        <button class ="btn btn-outline-primary" value= "<%=students[0].reg_no%>" name ="submit">
+                        Downlaod PDF
+                        </button>
+                    </a>
+                </div>
+                
         </div>
     </div>
 </div>

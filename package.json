@@ -26,6 +26,7 @@
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^6.0.1",
+    "pdfkit": "^0.11.0",
     "util": "^0.12.2",
     "util.promisify": "^1.0.1"
   }

@@ -7,6 +7,8 @@ var session=require('express-session');
 var cookie=require('cookie-parser');
 var flash=require('connect-flash');
 var bcrypt=require('bcrypt');
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
 var router =express();
 router.use(express.static("public"));
 router.use(bodyparser.urlencoded({extended:true}));
@@ -28,7 +30,9 @@ router.use(flash());
 
 const saltRounds = 10;
 var message,sess,logmsg;
-/*rendering routes*/
+//=====================================================================
+//Basic Rendering routes
+//======================================================================
 router.get('/students/',isLoggedIn,(req,res)=>{
     sess=req.session;
     // message=req.flash();
@@ -65,7 +69,12 @@ router.get('/students/register',(req,res)=>{
 router.get('/students/search',isLoggedIn,(req,res)=>{
     res.render('students/search',{currentuser:sess.username});
 });
-//==============================================
+
+
+
+//=================================================================================
+//Student Detail route
+//=================================================================================
 router.get('/students/student_detail/:id',isLoggedIn,(req,res)=>{
     var reg_id=req.params.id;
     var sql="SELECT * FROM students LEFT JOIN issuebooks ON students.registration_no=issuebooks.reg_no WHERE students.registration_no='"+reg_id+"'";
@@ -77,7 +86,94 @@ router.get('/students/student_detail/:id',isLoggedIn,(req,res)=>{
         }
     });
 });
-//==============================================
+
+//==========================================================================
+//Students Details Pdf Downloading route
+//==========================================================================
+
+router.get('/students/downloadpdf/:id',(req,res)=>{
+ var reg_id=req.params.id;
+var sql="SELECT issuebooks.reg_no,issuebooks.book_id,issuebooks.issue_date,issuebooks.return_date,issuebooks.issued_by,issuebooks.fine,students.first,students.last,students.branch,students.email,students.mobile_no FROM issuebooks LEFT JOIN students ON issuebooks.reg_no=students.registration_no WHERE issuebooks.reg_no='"+reg_id+"'";
+connection.query(sql,(err,row,fields)=>{
+    if(err)
+    console.log(err);
+    else{
+
+        const doc = new PDFDocument();
+        const regid=row[0].reg_no;
+        const name=row[0].first+' '+row[0].last;
+        const branch=row[0].branch;
+        const Email=row[0].email;
+        const mobile=row[0].mobile_no;
+        var date=new Date();
+        var timestamp=date.getTime();
+       doc.pipe(fs.createWriteStream('output'+timestamp+'.pdf'));
+       doc
+       .fontSize(20)
+       .fillColor('brown')
+       .text('Library Management System (NIT Jamshedpur)',100)
+       .moveDown(0.9)
+       .lineTo(100,160);
+       doc
+         .fontSize(20)
+         .fillColor('black')
+         .text(`Name :     ${name}`,70)
+         .moveDown(0.5);
+         doc
+         .fontSize(20)
+         .text(`Registration No :    ${regid}`)
+         .moveDown(0.5);
+         doc
+         .fontSize(20)
+         .text(`Branch :     ${branch}`)
+         .moveDown(0.5);
+         doc
+         .fontSize(20)
+         .text(`Email :     ${Email}`)
+         .moveDown(0.5);
+         doc
+         .fontSize(20)
+         .text(`Mobile :     ${mobile}`)
+         .moveDown(0.5);
+         doc
+         .fontSize(20)
+         .fillColor('blue')
+         .text('Book Issue Detail',220)
+         .moveDown(0.8);
+        var i=1,totalfine=0;
+
+       for(i=0;i<row.length;i++)
+       {
+         doc
+         .fontSize(13)
+         .fillColor('black')
+         .text(`Sr. No.        :  ${i+1}`,70)  
+         .text(`Book Id        :  ${row[i].book_id}`)  
+         .text(`Issue Date     :  ${row[i].issue_date} `) 
+         .text(`Return Date    :  ${row[i].return_date}`)   
+         .text(`Issued By      :  ${row[i].issued_by}`)   
+         .text(`Fine           :  ${row[i].fine}`)
+         .moveDown(1.2);
+        totalfine=totalfine+row[i].fine;
+
+       }
+       doc
+       .moveDown(1.9)
+         .fontSize(20)
+         .fillColor('red')
+         .text(`Total Fine :     ${totalfine}`)
+         .moveDown(0.5);
+       doc.end();
+       
+           res.send(row);
+    }
+});
+});
+
+
+//==========================================================================
+//Students Registering route(backend)
+//==========================================================================
 router.post('/students/register',(req,res)=>{
     var user=req.body.username;
     var first=req.body.first;
