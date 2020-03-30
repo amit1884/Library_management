@@ -57,6 +57,10 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     &nbsp;&nbsp;&nbsp;<a class="navbar-brand" href="#"><img src ="../../../images/images.png"width="40" height ="40">&nbsp;&nbsp;SignedIn As <%=activeId%><%=head%></a>
     <a href ="/Admin/admin/logout"><button class ="btn btn-danger">Logout</button></a>
+    <form action = "/Admin/admin/searchbooks" method ="GET" class ="ml-auto">
+        <input type ="text" name ="findbook" Placeholder ="Enter book name or author" class ="btn" style ="border:1px solid grey;width:250px;">
+        <button type ="submit" name ="submit" class ="btn btn-outline-primary">Search</button>
+    </form>
 </nav>
   <div class ="container-fluid">
     <div class ="row">
@@ -90,28 +94,35 @@
            <div class ="container-fluid bg-light">
                <div class ="row">
                    <div class ="col-md-12 col-xs-12">
-                    <table class ="stud_detail">
-                        <tr>
-                            <th>Name :</th>
-                            <td><%=students[0].first%>&nbsp;<%=students[0].last%></td>
-                        </tr>
-                        <tr>
-                         <th>Registration No :</th>
-                         <td><%=students[0].registration_no%></td>
-                     </tr>
-                     <tr>
-                         <th>Branch :</th>
-                         <td><%=students[0].branch%></td>
-                     </tr>
-                     <tr>
-                         <th>Email :</th>
-                         <td><%=students[0].email%></td>
-                     </tr>
-                     <tr>
-                         <th>Mobile No :</th>
-                         <td><%=students[0].mobile_no%></td>
-                     </tr>
-                    </table>
+                       <div class ="row">
+                       <div class ="col-md-4 col-xs-12">
+                           <div class =""><img src ="/uploads/<%=students[0].profile%>" style ="width:200px;height:200px;margin:10px;border-radius: 20px;"></div>
+                       </div>
+                       <div class ="col-md-8 col-xs-12">
+                        <table class ="stud_detail"style ="width:100%">
+                            <tr>
+                                <th>Name :</th>
+                                <td><%=students[0].first%>&nbsp;<%=students[0].last%></td>
+                            </tr>
+                            <tr>
+                             <th>Registration No :</th>
+                             <td><%=students[0].registration_no%></td>
+                         </tr>
+                         <tr>
+                             <th>Branch :</th>
+                             <td><%=students[0].branch%></td>
+                         </tr>
+                         <tr>
+                             <th>Email :</th>
+                             <td><%=students[0].email%></td>
+                         </tr>
+                         <tr>
+                             <th>Mobile No :</th>
+                             <td><%=students[0].mobile_no%></td>
+                         </tr>
+                        </table>
+                       </div>
+                       </div>
                    </div>
                </div>
            </div>

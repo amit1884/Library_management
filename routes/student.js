@@ -1,6 +1,7 @@
 var express =require('express');
 var path=require('path');
 var FuzzySearch=require('fuzzy-search');
+var multer  = require('multer')
 var methodOverride=require("method-override");
 var bodyparser=require('body-parser');
 var connection=require('../databaseconfig/configDb');
@@ -28,9 +29,21 @@ router.use(session({
   cookie: { secure: false }
 }))
 router.use(flash());
-
 const saltRounds = 10;
 var message,sess,logmsg;
+
+
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'public/uploads')
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname)
+    }
+  })
+  var upload = multer({ storage: storage }) 
+
+
 //=====================================================================
 //Basic Rendering routes
 //======================================================================
@@ -94,7 +107,7 @@ router.get('/students/student_detail/:id',isLoggedIn,(req,res)=>{
 
 router.get('/students/downloadpdf/:id',(req,res)=>{
  var reg_id=req.params.id;
-var sql="SELECT issuebooks.reg_no,issuebooks.book_id,issuebooks.issue_date,issuebooks.return_date,issuebooks.issued_by,issuebooks.fine,students.first,students.last,students.branch,students.email,students.mobile_no FROM students LEFT JOIN issuebooks ON issuebooks.reg_no=students.registration_no WHERE students.registration_no='"+reg_id+"'";
+var sql="SELECT issuebooks.reg_no,issuebooks.book_id,issuebooks.issue_date,issuebooks.return_date,issuebooks.issued_by,issuebooks.fine,students.first,students.last,students.branch,students.email,students.mobile_no,students.profile FROM students LEFT JOIN issuebooks ON issuebooks.reg_no=students.registration_no WHERE students.registration_no='"+reg_id+"'";
 connection.query(sql,(err,row,fields)=>{
     if(err)
     console.log(err);
@@ -106,6 +119,7 @@ connection.query(sql,(err,row,fields)=>{
         const branch=row[0].branch;
         const Email=row[0].email;
         const mobile=row[0].mobile_no;
+        const dp=row[0].profile;
         var date=new Date();
         var timestamp=date.getTime();
        doc.pipe(fs.createWriteStream('output'+timestamp+'.pdf'));
@@ -115,6 +129,12 @@ connection.query(sql,(err,row,fields)=>{
        .text('Library Management System (NIT Jamshedpur)',100)
        .moveDown(0.9)
        .lineTo(100,160);
+       doc
+       .image(`public/uploads/${dp}`,420,120,{  
+        width:150,
+        height:150
+       })
+
        doc
          .fontSize(20)
          .fillColor('black')
@@ -208,7 +228,15 @@ connection.query(sql,(err,rows,fields)=>{
 //==========================================================================
 //Students Registering route(backend)
 //==========================================================================
-router.post('/students/register',(req,res)=>{
+router.post('/students/register', upload.single('avatar'),(req,res,next)=>{
+    var profile=req.file;
+    if(profile){
+    console.log(profile);
+    var profilename=profile.filename;
+    }
+    else{
+        var profilename='default.png';
+    }
     var user=req.body.username;
     var first=req.body.first;
     var last=req.body.last;
@@ -217,7 +245,7 @@ router.post('/students/register',(req,res)=>{
     var mobile=req.body.mobile;
     var pwd=req.body.password;
     bcrypt.hash(pwd, saltRounds, function(err, hash) {
-        var sql="INSERT INTO students (registration_no,password,first,last,branch,email,mobile_no) VALUES('"+user+"','"+hash+"','"+first+"','"+last+"','"+branch+"','"+email+"','"+mobile+"')";
+        var sql="INSERT INTO students (registration_no,password,first,last,branch,email,mobile_no,profile) VALUES('"+user+"','"+hash+"','"+first+"','"+last+"','"+branch+"','"+email+"','"+mobile+"','"+profilename+"')";
         connection.query(sql,(err,rows,fields)=>{
             if(err)
             console.log("ERROR A GAYA "+err);

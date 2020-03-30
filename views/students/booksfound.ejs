@@ -61,8 +61,6 @@
                 <div class ="list-group-item active"><a href ="/Student/students/" style ="color:white">List Of Books</a></div>
                 <div class ="list-group-item"><a href ="/Student/students/search">Find book</a></div>
                 <div class ="list-group-item"><a href ="/Student/students/student_detail/<%=currentuser%>">Check Status</a></div>
-                <div class ="list-group-item"><a href ="#">Download</a></div>
-                <div class ="list-group-item"></div>
             </div>
             <br>
             <div class ="searchbar">
@@ -86,11 +84,15 @@
         <div class ="col-md-9 col-xs-12">
             <div class ="row text-center">
                 <div class= "col-12">
-                    <h2>You searched for </h2>
+                    <h2><u>You searched for</u></h2>
+                    <div class ="animated bounceIn">
+                        <h5 style ="color:green">Total Search : <%=foundbooks.length%></h5>
+                    </div>
                 </div>
-            </div>
+            </div><br>
             <div class ="row text-center">
                 <div class= "col-12">
+                    <%if(foundbooks.length>0){%>
                     <table>
                         <tr>
                             <th>Sr No.</th>
@@ -118,6 +120,13 @@
                             </tr>
                         <%})%>
                     </table>
+                    <%} else{%>
+                        <br><br><br><br>
+                        <div class ="text-center animated bounceIn">
+                            <h4>-------No Book Found------</h4>
+                            
+                        </div>
+                        <% } %>
                 </div>
             </div>
         </div>

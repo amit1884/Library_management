@@ -12,7 +12,7 @@
         <div class ="row">
             <div class ="col-md-4 col-xs-12"></div>
             <div class ="col-md-4 col-xs-12">
-                <form action ="/Student/students/register" method ="POST">
+                <form action ="/Student/students/register" method ="POST" enctype="multipart/form-data">
                     <div class ="form-group"><input class ="form-control" name ="username" type ="text" placeholder ="Registration No" required pattern="[A-Za-z0-9]+" title ="Enter a valid registration Number"></div>
                     <div class ="form-group"><input class ="form-control" name ="first" type ="text" placeholder ="First Name" required pattern ="[A-Za-z]+" title ="Only Alphabets are allowed"></div>
                     <div class ="form-group"><input class ="form-control" name ="last" type ="text" placeholder ="Last Name" required pattern ="[A-Za-z]+" title ="Only Alphabets are allowed"></div>
@@ -20,6 +20,7 @@
                     <div class ="form-group"><input class ="form-control" name ="email" type ="text" placeholder ="Email" required pattern ="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title ="Input valid email Id"></div>
                     <div class ="form-group"><input class ="form-control" name ="mobile" type ="number" placeholder ="Mobile No" required pattern="[789][0-9]{9}" title ="Enter valid  mobile number "></div>
                     <div class ="form-group"><input class ="form-control" name ="password" type ="password" placeholder ="Password" required minlength="10"pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$" title ="Must contain atleast 10 character conatianing digits,upper and lowercase"></div>
+                    <div class ="form-group"><input type ="file" name ="avatar"class ="form-control"></div>
                     <div class ="form-group"><input class ="form-control btn btn-outline-primary" type ="submit" name ="submit"></div>
                 </form>
             </div>

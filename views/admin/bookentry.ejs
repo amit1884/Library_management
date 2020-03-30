@@ -52,6 +52,10 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     &nbsp;&nbsp;&nbsp;<a class="navbar-brand" href="#"><img src ="../images/images.png"width="40" height ="40">&nbsp;&nbsp;SignedIn As <%=active%><%=head%></a>
     <a href ="/Admin/admin/logout"><button class ="btn btn-danger">Logout</button></a>
+    <form action = "/Admin/admin/searchbooks" method ="GET" class ="ml-auto">
+        <input type ="text" name ="findbook" Placeholder ="Enter book name or author" class ="btn" style ="border:1px solid grey;width:250px;">
+        <button type ="submit" name ="submit" class ="btn btn-outline-primary">Search</button>
+    </form>
 </nav>
   <div class ="container-fluid">
     <div class ="row">

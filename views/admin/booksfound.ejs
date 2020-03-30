@@ -1,0 +1,132 @@
+<%var i=0;%>
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Home</title>
+<link rel ="stylesheet" href ="../css/bootstrap.min.css">
+<link rel ="stylesheet" href ="../css/fontawesome.min.css">
+<link rel ="stylesheet" href ="../css/animate.css">
+<link rel ="stylesheet" href ="../css/style.css">
+<script type ="text/javascript"src ="../js/jquery.js"></script>
+<style>
+    table{
+        width:100%;
+        padding:5px;
+    }
+    th,td{
+        padding:5px;
+        border:1px solid black;
+    }
+    th{
+        background-color:#f5f8fd;
+        color:#000;
+    }
+    .jumbotron{
+        padding:10px;
+        min-height:250px;
+    }
+    marquee li{
+        padding:15px;
+        color:#413e66;
+    }
+</style>
+</head>
+<body>
+<div class ="container-fluid">
+    <div class= "row text-center">
+        <div class ="col-md-3 col-xs-12"><br>
+            <img src ="../images\Logo_Pinwheel.png" class ="img-responsive" height ="150">
+        </div>
+        <div class ="col-md-6 col-xs-12"><br>
+            <h1>Library Management System</h1>
+            <h3>(NIT Jamshedpur)</h3>
+        </div>
+        <div class ="col-md-3 col-xs-12">
+            <img src ="../images\images.jpg" class ="img-responsive"height ="200">
+        </div>
+    </div>
+</div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    &nbsp;&nbsp;&nbsp;<a class="navbar-brand" href="#"><img src ="../images/images.png"width="40" height ="40">&nbsp;&nbsp;SignedIn As <%=activeId%><%=head%></a>
+    <a href ="/Admin/admin/logout"><button class ="btn btn-danger">Logout</button></a>
+    <form action = "/Admin/admin/searchbooks" method ="GET" class ="ml-auto">
+        <input type ="text" name ="findbook" Placeholder ="Enter book name or author" class ="btn" style ="border:1px solid grey;width:250px;">
+        <button type ="submit" name ="submit" class ="btn btn-outline-primary">Search</button>
+    </form>
+</nav>
+  <div class ="container-fluid">
+    <div class ="row">
+        <div class ="col-md-3 col-xs-12">
+            <div class ="list-group">
+                <div class ="list-group-item active"><a href ="#" style ="color:white">List Of Books</a></div>
+                <div class ="list-group-item"><a href ="/Admin/admin/bookentry">Add New Book</a></div>
+                <div class ="list-group-item"><a href ="/Admin/admin/book_issue">Issue a Book</a></div>
+                <div class ="list-group-item"><a href ="/Admin/admin/list_of_students">List of Students</a></div>
+                <%if(head){%>
+                <div class ="list-group-item"><a href ="/Admin/admin/list_of_admins">List of Librarians</a></div>
+                <%}%>
+            </div><br>
+            <div class ="bk_notification jumbotron">
+                <h4 class ="text-center"><u>Notice</u></h4>
+                <ul>
+                <marquee scrolldelay="10" direction="up"height="100px;" onmouseover="stop();" onmouseout="start()">
+                    <li>New books for GATE  will be arriving very soon</li>
+                    <li>More E-books will be added soon</li>
+                    <li>Nit jamshedpur</li>
+                </marquee>
+                </ul>
+            </div>
+        </div>
+        <div class ="col-md-9 col-xs-12">
+            <div class ="row text-center">
+                <div class= "col-12">
+                    <h2>Search Result</h2>
+                    <h4 style ="color:green">Total result : <%=foundbooks.length%></h4>
+                </div>
+            </div>
+            <div class ="row text-center">
+                <div class= "col-12">
+                    <%if(foundbooks.length>0){%>
+                    <table>
+                        <tr>
+                            <th>Sr No.</th>
+                            <th>Book_Id</th>
+                            <th>Book_Name</th>
+                            <th>Book_author</th>
+                            <th>Book_Publication</th>
+                            <th>Book_Edition</th>
+                            <th>Course</th>
+                            <th>Department</th>
+                            <th>Quantity</th>
+                        </tr>
+                        <%foundbooks.forEach((data)=>{%>
+                            <%i++;%>
+                            <tr>
+                                <td><%=i%></td>
+                                <td><%=data.book_id%></td>
+                                <td><%=data.book_name%></td>
+                                <td><%=data.book_author%></td>
+                                <td><%=data.book_publication%></td>
+                                <td><%=data.book_edition%></td>
+                                <td><%=data.book_course%></td>
+                                <td><%=data.book_department%></td>
+                                <td><%=data.book_qty%></td>
+                            </tr>
+                        <%})%>
+                    </table>
+                    <%}else{%>
+                        <h4>-------No Result Found-------</h4>
+                        <%}%>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$('#logmsg').fadeOut(2000);
+</script>
+<%- include('../partials/footer.ejs') %>

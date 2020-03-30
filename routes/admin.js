@@ -1,6 +1,7 @@
 var express =require('express');
 var path=require('path');
 var json2csv = require('json2csv').parse;
+var FuzzySearch=require('fuzzy-search');
 var fs = require('fs');
 var session=require('express-session');
 var cookie=require('cookie-parser');
@@ -26,6 +27,10 @@ router.use(flash());
 const saltRounds = 10;
 
 var sess,logmsg,message;
+
+//=======================================================================================
+//Index Page Route
+//=======================================================================================
 router.get('/',(req,res)=>{
 
     sess = req.session;
@@ -48,6 +53,9 @@ router.get('/',(req,res)=>{
     }
     
 });
+//========================================================================================
+//Bookentry Route
+//========================================================================================
 router.get('/admin/bookentry',(req,res)=>{
     
     sess = req.session;
@@ -61,6 +69,9 @@ router.get('/admin/bookentry',(req,res)=>{
         res.redirect('/Admin/admin/login');
     }
 });
+//=======================================================================================
+//Book Issue Route
+//=======================================================================================
 router.get('/admin/book_issue',(req,res)=>{
     
     sess = req.session;
@@ -74,8 +85,6 @@ router.get('/admin/book_issue',(req,res)=>{
         message=req.flash('msg3','Login Required');
         res.redirect('/Admin/admin/login');
     }
-    
-   
 });
 //====================================================================
 //Student List rendering routes
@@ -111,15 +120,40 @@ router.get('/admin/download',(req,res)=>{
             var date =new Date();
             var timestamp=date.getTime();
             var csv = json2csv(data,{fields: fields });
-            fs.writeFile('../files'+timestamp+'.csv', csv, function(err) {
+            fs.writeFile('../finelist'+timestamp+'.csv', csv, function(err) {
             if (err) throw err;
             console.log('converted');
-            message=req.flash('success','Coverted to CSV');
+            message=req.flash('success','Downloaded fine list');
              res.redirect('/Admin/admin/list_of_students');
             });
         }
     });
 
+})
+
+//======================================================================================
+//download whole list of student in csv file
+//======================================================================================
+router.get('/admin/download_full_list',(req,res)=>{
+
+    var sql="SELECT * FROM students ORDER BY registration_no";
+    connection.query(sql,(err,rows,fields)=>{
+        if(err)
+        console.log(err);
+        else{
+            var fields = ['registration_no','first','last','branch','email','mobile_no'];
+            var data=rows;
+            var date =new Date();
+            var timestamp=date.getTime();
+            var csv = json2csv(data,{fields: fields });
+            fs.writeFile('../studentslist'+timestamp+'.csv', csv, function(err) {
+            if (err) throw err;
+            console.log('converted');
+            message=req.flash('success','Downloaded students list');
+             res.redirect('/Admin/admin/list_of_students');
+            })
+        }
+    })
 })
 //======================================================================================
 //Student's details post  routes
@@ -137,23 +171,23 @@ router.get('/admin/student_details/:id',isLoggedIn,(req,res)=>{
 });
 
 
-//===============================================================
+//========================================================================================
 //Registration rendering routes
-//===============================================================
+//========================================================================================
 router.get('/admin/register',(req,res)=>{
     res.render('admin/register');
 });
-//=============================
+//======================================================================================
 //Login rendering routes
-//=============================
+//=======================================================================================
 router.get('/admin/login',(req,res)=>{
     message=req.flash();
    
     res.render('admin/login',{mess:message});
 });
-//====================================
+//=======================================================================================
 //head Admin routes
-//====================================
+//=======================================================================================
 
 router.get('/admin/master_login',(req,res)=>{
     res.render('admin/master_login');
@@ -178,9 +212,9 @@ router.post('/admin/master_login',(req,res)=>{
         }
     });
 });
-//========================================================
+//=======================================================================================
 //List of admin rendering route
-//========================================================
+//=======================================================================================
 
 router.get('/admin/list_of_admins',(req,res)=>{
 
@@ -275,6 +309,32 @@ router.post('/admin/master/:id',(req,res)=>{
         }
     });
 });
+
+//==================================================================================
+//Book Search Route(backend)[Fuzzy Search]
+//==================================================================================
+router.get('/admin/searchbooks',isLoggedIn,(req,res)=>{
+
+    var findbk=req.query.findbook;
+    var sql="SELECT * FROM books ORDER BY book_id";
+    connection.query(sql,(err,rows,fields)=>{
+    
+        if(err)
+        console.log(err)
+        else{
+            const searcher = new FuzzySearch(rows, ['book_author','book_name'], {
+                caseSensitive: false,
+              });
+              const result = searcher.search(findbk);
+              console.log(result);
+              res.render('admin/booksfound',{foundbooks:result,activeId:sess.username,head:sess.head})
+        }
+    });
+    });
+    
+    
+
+
 
 //=========================================================================================
 
