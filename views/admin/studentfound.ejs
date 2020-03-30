@@ -94,11 +94,6 @@
         <div class ="col-md-9 col-xs-12">
            <div class ="row text-center">
                <div class ="col-md-12 col-xs-12">
-                <%if(message.success){%>
-                    <div class="alert alert-success" id ="logmsg"role="alert">
-                    <%=message.success%>
-                    </div>
-                    <%}%>
                   <h2><u>List Of Students</u></h2> 
                </div>
            </div>
@@ -112,6 +107,7 @@
                </div>
            </div>
            <br>
+           <%if(foundstudent.length){%>
            <table class ="text-center">
                <tr>
                    <th>Sr.No</th>
@@ -122,7 +118,7 @@
                    <th>Mobile</th>
                    <th>View</th>
                </tr>
-               <%students.forEach((data)=>{ i++;%>
+               <%foundstudent.forEach((data)=>{ i++;%>
                     <tr>
                     <td><%=i%></td>
                     <td><%=data.registration_no%></td>
@@ -136,6 +132,9 @@
                     </tr>
               <% })%>
            </table>
+           <%}else {%>
+            <h4 class ="text-center">------No Result Found------</h4>
+            <%}%>
         </div>
     </div>
 </div>

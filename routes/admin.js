@@ -332,11 +332,29 @@ router.get('/admin/searchbooks',isLoggedIn,(req,res)=>{
     });
     });
     
-    
-
-
-
 //=========================================================================================
+//Students Search (Fuzzy Search)
+//=========================================================================================
+
+router.post('/admin/searchstudent',isLoggedIn,(req,res)=>{
+
+    var findstud=req.body.search_value;
+    var sql="SELECT * FROM students ORDER BY registration_no";
+    connection.query(sql,(err,rows,fields)=>{
+    
+        if(err)
+        console.log(err)
+        else{
+            const searcher = new FuzzySearch(rows, ['registration_no','first','last'], {
+                caseSensitive: false,
+              });
+              const result = searcher.search(findstud);
+              console.log(result);
+              res.render('admin/studentfound',{foundstudent:result,activeId:sess.username,head:sess.head})
+        }
+    });
+    });
+ 
 
 //--------------------------------------------------------------------------------
 //Auth routes for librarians

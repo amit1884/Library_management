@@ -69,6 +69,17 @@
                     <div class ="list-group-item"><a href ="/Admin/admin/list_of_admins">List of Librarians</a></div>
                     <%}%>
             </div><br>
+            <div class ="search_students">
+                <h4 class ="text-center">Search Students</h4>
+                <form action ="/Admin/admin/searchstudent" method ="POST">
+                    <div class ="form-group">
+                        <input type ="text" class ="form-control" name ="search_value"placeholder ="Enter name or registration No.">
+                    </div>
+                    <div class ="form-group">
+                        <input type ="submit" class ="form-control btn btn-primary" name ="submit">
+                    </div>
+                </form>
+            </div><br>
             <div class ="bk_notification jumbotron">
                 <h4 class ="text-center"><u>Notice</u></h4>
                 <ul>
