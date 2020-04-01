@@ -17,7 +17,7 @@
         padding:5px;
     }
     th,td{
-        padding:5px;
+        padding:8px;
         border:1px solid black;
     }
     th{
@@ -50,7 +50,7 @@
     </div>
 </div>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    &nbsp;&nbsp;&nbsp;<a class="navbar-brand" href="#"><img src ="../images/images.png"width="40" height ="40">&nbsp;&nbsp;SignedIn As <%=activeId%><%=head%></a>
+    &nbsp;&nbsp;&nbsp;<a class="navbar-brand" href="/"><img src ="../images/images.png"width="40" height ="40">&nbsp;&nbsp;SignedIn As <%=activeId%><%=head%></a>
     <a href ="/Admin/admin/logout"><button class ="btn btn-danger">Logout</button></a>
     <form action = "/Admin/admin/searchbooks" method ="GET" class ="ml-auto">
         <input type ="text" name ="findbook" Placeholder ="Enter book name or author" class ="btn" style ="border:1px solid grey;width:250px;">
@@ -61,7 +61,7 @@
     <div class ="row">
         <div class ="col-md-3 col-xs-12">
             <div class ="list-group">
-                <div class ="list-group-item active"><a href ="#" style ="color:white">List Of Books</a></div>
+                <div class ="list-group-item active"><a href ="/admin" style ="color:white">List Of Books</a></div>
                 <div class ="list-group-item"><a href ="/Admin/admin/bookentry">Add New Book</a></div>
                 <div class ="list-group-item"><a href ="/Admin/admin/book_issue">Issue a Book</a></div>
                 <div class ="list-group-item"><a href ="/Admin/admin/list_of_students">List of Students</a></div>

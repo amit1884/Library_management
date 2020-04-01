@@ -75,6 +75,7 @@ router.get('/students/',isLoggedIn,(req,res)=>{
 
 router.get('/students/login',(req,res)=>{
     message=req.flash();
+    finecalculation();
     res.render('students/login',{message:message});
 });
 router.get('/students/register',(req,res)=>{
@@ -91,6 +92,7 @@ router.get('/students/search',isLoggedIn,(req,res)=>{
 //=================================================================================
 router.get('/students/student_detail/:id',isLoggedIn,(req,res)=>{
     var reg_id=req.params.id;
+    finecalculation();
     var sql="SELECT * FROM students LEFT JOIN issuebooks ON students.registration_no=issuebooks.reg_no WHERE students.registration_no='"+reg_id+"'";
     connection.query(sql,(err,rows,fields)=>{
         if(err)
@@ -312,6 +314,71 @@ router.get('/students/logout',(req,res) => {
     });
 
 });
+
+
+//======================================================================================
+//finecalculation function
+//======================================================================================
+function finecalculation()
+{
+   var sql="SELECT * FROM fineflag";
+   connection.query(sql,(err,rows,fields)=>{
+
+    if(err)
+    console.log(err)
+    else
+    {
+        var tabledate=new Date(rows[0].reload_date);
+        console.log(rows[0].reload_date)
+        var curreload_date=new Date();
+        var reloaddiff=Math.floor((curreload_date.getTime()-tabledate.getTime())/(1000*3600*24));
+        console.log('Reload Day difference  '+reloaddiff);
+        if(reloaddiff>0)
+        {
+            var sql="SELECT * FROM issuebooks";
+            connection.query(sql,(err,row,fields)=>{
+
+                if(err)
+                console.log(err);
+                else{
+                    var current=new Date();
+                    for(var i=0;i<row.length;i++)
+                    {
+                        var duedate=row[i].return_date;
+                        var daysdiff=Math.floor((current.getTime()-duedate.getTime())/(1000*3600*24));
+                        console.log('No Of days Due  '+daysdiff);
+                        if(daysdiff>0)
+                        {
+                        var sql="UPDATE issuebooks SET fine ='"+daysdiff*5+"' WHERE book_id='"+row[i].book_id+"'";
+                        connection.query(sql,(err,rows,fields)=>{
+                            if(err)
+                            console.log(err);
+                            else{
+                            console.log('Update ho gaya');
+                            var curr=new Date();
+                            console.log(curr);
+                            var sql="UPDATE fineflag SET reload_date = '"+curr+"' WHERE id='1'";
+                            connection.query(sql,(err,result,fields)=>{
+                                if(err)
+                                console.log(err);
+                                else{
+                                console.log('fineflag table update ho gaya')
+                                }
+                            })
+                        }
+                        })
+                    }
+                    }
+                }
+            })
+        }
+        else{
+            console.log('Once Updated');
+        }
+    }
+   })
+}
+
 
 
 
