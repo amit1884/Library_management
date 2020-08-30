@@ -1,0 +1,5 @@
+"reg_no","first","last","branch","email","mobile_no","book_id","issue_date","return_date","issued_by","fine"
+"2018ugcs084","Amit","Raj","CSE","amitraj200raj@gmail.com","9470940924",101,"2020-03-27T13:22:10.000Z","2020-04-02T18:30:00.000Z","amit1884",0
+"2018ugme005","Gaya","Prashad","ME","gayaprasads954@gmail.com","9867564523",109,"2020-03-27T03:39:28.000Z","2020-04-01T18:30:00.000Z","amit1884",0
+"2018ugme005","Gaya","Prashad","ME","gayaprasads954@gmail.com","9867564523",110,"2020-03-27T03:40:34.000Z","2020-04-02T18:30:00.000Z","amit1884",0
+"2018ugcs052","Adarsh","Gautam","CSE","gadarsh555@gmail.com","9470940928",101,"2020-03-30T13:26:30.000Z","2020-03-30T18:30:00.000Z","head_admin",5

@@ -148,7 +148,7 @@ router.get('/admin/download_full_list',(req,res)=>{
             var date =new Date();
             var timestamp=date.getTime();
             var csv = json2csv(data,{fields: fields });
-            fs.writeFile('../studentslist'+timestamp+'.csv', csv, function(err) {
+            fs.writeFile('../../studentslist'+timestamp+'.csv', csv, function(err) {
             if (err) throw err;
             console.log('converted');
             message=req.flash('success','Downloaded students list');

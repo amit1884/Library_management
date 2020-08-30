@@ -111,7 +111,7 @@ function finealert(){
                         service:'gmail',
                         auth: {
                           user: 'cseamit084@gmail.com', 
-                          pass: 'slugterraburpy'
+                          pass: 'thisismypassword'
                         }
                       });
                     

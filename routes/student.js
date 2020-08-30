@@ -15,7 +15,6 @@ var router =express();
 router.use(express.static("public"));
 router.use(bodyparser.urlencoded({extended:true}));
 router.use(methodOverride("_method"));
-
 /* required statements to use session and flash*/
 router.use(express.static("public"));
 router.use(bodyparser.urlencoded({extended:true}));
